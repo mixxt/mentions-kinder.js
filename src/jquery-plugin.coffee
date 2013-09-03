@@ -1,13 +1,12 @@
 $.fn.mentionsKinder = (options)->
   @.each ->
     if $(@).data('mentionsKinder') is undefined
-      $(@).data('mentionsKinder', $.mentionsKinder(@, options))
+      $(@).data('mentionsKinder', new $.MentionsKinder(@, options))
 
-$.mentionsKinder = (element, options)->
-  new MentionsKinder(element, options)
+$.MentionsKinder = MentionsKinder
 
 # expose default options
-$.mentionsKinder.defaultOptions = MentionsKinder::defaultOptions
+$.MentionsKinder.defaultOptions = MentionsKinder::defaultOptions
 
 #/*
 # * mentions-kinder

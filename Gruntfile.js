@@ -22,13 +22,13 @@ module.exports = function(grunt) {
                 },
                 expand: true,
                 cwd: 'src',
-                src: ['*.coffee'],
+                src: ['**/*.coffee'],
                 dest: 'tmp/src',
                 ext: '.js'
             },
             test:{
                 files:{
-                    'tmp/test/tests.js':'test/*.coffee'
+                    'tmp/tests.js':'test/**/*.coffee'
                 }
             }
         },
@@ -40,7 +40,12 @@ module.exports = function(grunt) {
                 stripBanners: true
             },
             dev: {
-                src: ['tmp/src/mentions-kinder.js', 'tmp/src/jquery-plugin.js'],
+                src: [
+                    'tmp/src/autocompleter.js',
+                    'tmp/src/mentions-kinder.js',
+                    'tmp/src/jquery-plugin.js',
+                    'tmp/src/autocompleter/typeahead.js'
+                ],
                 dest: 'tmp/<%= pkg.name %>.js',
                 nonull: true
             },
@@ -64,7 +69,7 @@ module.exports = function(grunt) {
         },
         watch: {
             all:{
-                files:['src/*.coffee', 'test/*.coffee'],
+                files:['src/**/*.coffee', 'test/**/*.coffee'],
                 tasks:['test']
             }
         },
