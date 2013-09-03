@@ -17,6 +17,9 @@ module.exports = function(grunt) {
         },
         coffee: {
             dev:{
+                options: {
+                    bare: true
+                },
                 files:{
                     'src/mentions-kinder.js':'src/*.coffee'
                 }
