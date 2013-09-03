@@ -1,3 +1,5 @@
+[![Build Status](https://travis-ci.org/mixxt/mentions-kinder.js.png?branch=develop)](https://travis-ci.org/mixxt/mentions-kinder.js)
+
 mentions-kinder.js
 =================
 
