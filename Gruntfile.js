@@ -65,7 +65,7 @@ module.exports = function(grunt) {
         watch: {
             all:{
                 files:['src/*.coffee', 'test/*.coffee'],
-                tasks:['coffee:dev', 'coffee:test', 'qunit']
+                tasks:['test']
             }
         },
     });
