@@ -1,4 +1,4 @@
-mentionsKinder.js
+mentions-kinder.js
 =================
 
 ## Goals
