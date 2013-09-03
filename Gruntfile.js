@@ -67,6 +67,7 @@ module.exports = function(grunt) {
     grunt.loadNpmTasks('grunt-contrib-watch');
 
     // Default task.
-    grunt.registerTask('default', ['coffee:dev', 'coffee:test', 'qunit']);
+    grunt.registerTask('test', ['coffee:dev', 'coffee:test', 'qunit']);
+    grunt.registerTask('default', 'test');
 
 };
