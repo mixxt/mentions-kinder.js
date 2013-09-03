@@ -1,0 +1,27 @@
+{
+  "name": "mentions-kinder",
+  "title": "mentions-kinder",
+  "description": "The best jQuery plugin ever.",
+  "version": "0.0.0",
+  "homepage": "https://github.com/mixxt/mentions-kinder.js",
+  "author": {
+    "name": "Christoph",
+    "email": "christoph@mixxt.net",
+    "url": "www.mixxt.de"
+  },
+  "repository": {
+    "type": "git",
+    "url": "git://github.com/mixxt/mentions-kinder.js.git"
+  },
+  "bugs": "https://github.com/mixxt/mentions-kinder.js/issues",
+  "licenses": [
+    {
+      "type": "MIT",
+      "url": "https://github.com/mixxt/mentions-kinder.js/blob/master/LICENSE-MIT"
+    }
+  ],
+  "dependencies": {
+    "jquery": "*"
+  },
+  "keywords": []
+}
