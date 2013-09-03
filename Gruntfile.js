@@ -13,42 +13,52 @@ module.exports = function(grunt) {
             ' Licensed <%= _.pluck(pkg.licenses, "type").join(", ") %> */\n',
         // Task configuration.
         clean: {
-            files: ['dist', 'test/*.js', 'src/*.js']
+            files: ['dist', 'tmp', 'test/*.js']
         },
         coffee: {
             dev:{
                 options: {
                     bare: true
                 },
-                files:{
-                    'src/mentions-kinder.js':'src/*.coffee'
-                }
+                expand: true,
+                cwd: 'src',
+                src: ['*.coffee'],
+                dest: 'tmp/src',
+                ext: '.js'
             },
             test:{
                 files:{
-                    'test/tests.js':'test/*.coffee'
+                    'tmp/test/tests.js':'test/*.coffee'
                 }
             }
         },
-//    concat: {
-//      options: {
-//        banner: '<%= banner %>',
-//        stripBanners: true
-//      },
-//      dist: {
-//        src: ['src/<%= pkg.name %>.js'],
-//        dest: 'dist/<%= pkg.name %>.js'
-//      },
-//    },
-//    uglify: {
-//      options: {
-//        banner: '<%= banner %>'
-//      },
-//      dist: {
-//        src: '<%= concat.dist.dest %>',
-//        dest: 'dist/<%= pkg.name %>.min.js'
-//      },
-//    },
+        concat: {
+            options: {
+                banner: '<%= banner %>' +
+                    "(function($){\n",
+                footer: "\n})(jQuery);",
+                stripBanners: true
+            },
+            dev: {
+                src: ['tmp/src/mentions-kinder.js', 'tmp/src/jquery-plugin.js'],
+                dest: 'tmp/<%= pkg.name %>.js',
+                nonull: true
+            },
+            dist: {
+                src: ['tmp/src/mentions-kinder.js', 'tmp/src/jquery-plugin.js'],
+                dest: 'dist/<%= pkg.name %>.js',
+                nonull: true
+            }
+        },
+        uglify: {
+            options: {
+                banner: '<%= banner %>'
+            },
+            dist: {
+                src: '<%= concat.dist.dest %>',
+                dest: 'dist/<%= pkg.name %>.min.js'
+            }
+        },
         qunit: {
             files: ['test/**/*.html']
         },
@@ -62,12 +72,16 @@ module.exports = function(grunt) {
 
     // These plugins provide necessary tasks.
     grunt.loadNpmTasks('grunt-contrib-coffee');
+    grunt.loadNpmTasks('grunt-contrib-concat');
+    grunt.loadNpmTasks('grunt-contrib-uglify');
     grunt.loadNpmTasks('grunt-contrib-clean');
     grunt.loadNpmTasks('grunt-contrib-qunit');
     grunt.loadNpmTasks('grunt-contrib-watch');
 
     // Default task.
-    grunt.registerTask('test', ['coffee:dev', 'coffee:test', 'qunit']);
+    grunt.registerTask('precompile', ['coffee:dev', 'coffee:test', 'concat:dev']);
+    grunt.registerTask('dist', ['coffee:dev', 'coffee:test', 'concat:dist', 'uglify:dist']);
+    grunt.registerTask('test', ['precompile', 'qunit']);
     grunt.registerTask('default', 'test');
 
 };
