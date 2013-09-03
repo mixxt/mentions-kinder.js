@@ -1,6 +1,23 @@
 do ($ = jQuery) ->
-  $.fn.mentionsKinder = ->
-    @
+  class MentionsKinder
+    defaultOptions:
+      trigger: ['@']
+
+    constructor: ($element, options)->
+      @options = $.extend {}, @defaultOptions, options
+
+  $.fn.mentionsKinder = (options)->
+    @.each ->
+      if $(@).data('mentionsKinder') is undefined
+        $(@).data('mentionsKinder', $.mentionsKinder(@, options))
+
+  $.mentionsKinder = (element, options)->
+    new MentionsKinder(element, options)
+
+  # expose default options
+  $.mentionsKinder.defaultOptions = MentionsKinder::defaultOptions
+
+
 
 #/*
 # * mentions-kinder

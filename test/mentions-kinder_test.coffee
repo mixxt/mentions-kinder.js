@@ -28,6 +28,19 @@ do ($ = jQuery) ->
   test 'is chainable', ->
     strictEqual this.elems.mentionsKinder(), this.elems, 'should be chainable'
 
+
+  module 'jQuery.mentionsKinder'
+
+  test 'is defined', ->
+    ok $.mentionsKinder
+
+  test 'has default options', ->
+    ok $.mentionsKinder.defaultOptions
+
+  test 'changes defaultOptions on prototype', ->
+    $.mentionsKinder.defaultOptions.foo = 'bar'
+    deepEqual $.mentionsKinder().options, $.mentionsKinder.defaultOptions, 'default options are inherited into object'
+
 #(function($) {
 #
 #  module('jQuery#awesome', {
