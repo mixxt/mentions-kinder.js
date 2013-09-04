@@ -3,4 +3,4 @@
 ###
 class Autocompleter.Typeahead extends Autocompleter
 
-  
+
