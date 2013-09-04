@@ -1,3 +1,6 @@
+###
+  Autocompleter Base
+###
 class Autocompleter
   constructor: (callback)->
     @callback = callback

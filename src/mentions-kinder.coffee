@@ -1,4 +1,6 @@
-# base class to handle all mention related stuff
+###
+  Base class
+###
 class MentionsKinder
   # default options, exposed under $.mentionsKinder.defaultOptions
   defaultOptions:
