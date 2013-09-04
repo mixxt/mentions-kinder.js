@@ -20,15 +20,8 @@
 ###
 
 do ($ = jQuery) ->
-  class DummyAutocompleter extends $.MentionsKinder.Autocompleter
-    timeout: 500
-    search: (string)->
-      clearTimeout(@timeout) if @timeout
-      value = ~~(Math.random() * 1000) # dummy val
-      callback = @callback
-      @timeout = setTimeout((-> callback({ name: string, value: value })), @timeout)
 
-  module 'DummyAutocompleter'
+  module '$.MentionsKinder.Autocompleter.DummyAutocompleter'
 
   asyncTest 'it returns async', ->
     expect(2)
@@ -38,6 +31,6 @@ do ($ = jQuery) ->
       ok data.value
       start()
 
-    autocompleter = new DummyAutocompleter(callback)
+    autocompleter = new $.MentionsKinder.Autocompleter.DummyAutocompleter(callback)
     autocompleter.timeout = 50
     autocompleter.search 'foo'
