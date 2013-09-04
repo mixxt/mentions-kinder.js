@@ -27,6 +27,12 @@ do ($ = jQuery) ->
   test 'is chainable', ->
     strictEqual @elems.mentionsKinder(), @elems, 'should be chainable'
 
+  test 'sets data("mentionsKinder")', ->
+    expect 2
+
+    @elems.mentionsKinder().each ->
+      ok $(@).data('mentionsKinder') instanceof $.MentionsKinder
+
 
   module 'jQuery.MentionsKinder'
 
@@ -41,16 +47,6 @@ do ($ = jQuery) ->
     obj = new $.MentionsKinder(document.createElement('textarea'))
 
     ok obj.options.foo, 'custom option is set'
-
     deepEqual obj.options, $.MentionsKinder.defaultOptions, 'default options are inherited into object'
 
-  test 'accepts options', ->
-    customTrigger = ['&']
-    obj = new $.MentionsKinder(document.createElement('textarea'), trigger: customTrigger)
-
-    equal obj.options.trigger, customTrigger, 'overrides defaultOptions'
-    notEqual obj.defaultOptions.trigger, customTrigger, 'does not change defaultOptions'
-
-  test 'it raises error if initialized with wrong or no element', ->
-    throws -> $.MentionsKinder()
-    throws -> $.MentionsKinder(document.createElement('span'))
+    delete $.MentionsKinder.defaultOptions.foo

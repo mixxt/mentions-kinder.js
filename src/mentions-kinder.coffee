@@ -4,14 +4,42 @@
 class MentionsKinder
   # default options, exposed under $.mentionsKinder.defaultOptions
   defaultOptions:
-    autocompleter:
-      '@': Autocompleter
+    trigger:
+      '@': {} # inherit default
+
+  triggerDefaultOptions:
+      autocompleter: Autocompleter
+      # formatter
+      # serializer
 
   # le constructor
   constructor: (element, options)->
-    @options = $.extend {}, @defaultOptions, options
-    @$el = $(element)
-    unless @$el.is('input[type=text],textarea')
+    @_ensureInput(element)
+    @_buildOptions(options)
+
+    @_setupElements()
+
+  _ensureInput: (element)->
+    @$input = $(element)
+    unless @$input.is('input[type=text],textarea')
       $.error("$.mentionsKinder works only on input[type=text] or textareas, was #{element && element.tagName}")
+
+  _buildOptions: (options)->
+    # build options
+    @options = $.extend {}, @defaultOptions, options
+    # build trigger options
+    $.each @options.trigger, (trigger, triggerOptions)=>
+      @options.trigger[trigger] = $.extend {}, @triggerDefaultOptions, triggerOptions
+
+    @trigger = @options.trigger || {}
+
+  _setupElements: ->
+    @$wrap = $('<div class="mentions-kinder-wrap"></div>')
+    @$overlay = $('<div class="mentions-overlay"></div>')
+    @$wrap.insertAfter(@$input)
+    @$overlay.appendTo(@$wrap)
+    @$input.appendTo(@$wrap)
+
+
 
 MentionsKinder.Autocompleter = Autocompleter

@@ -11,3 +11,4 @@ $.fn.mentionsKinder = (options)->
 $.MentionsKinder = MentionsKinder
 # expose default options
 $.MentionsKinder.defaultOptions = MentionsKinder::defaultOptions
+$.MentionsKinder.triggerDefaultOptions = MentionsKinder::triggerDefaultOptions
