@@ -18,10 +18,11 @@ class MentionsKinder
     @_buildOptions(options)
 
     @_setupElements()
+    @_setupSync()
 
   _ensureInput: (element)->
-    @$input = $(element)
-    unless @$input.is('input[type=text],textarea')
+    @$originalInput = $(element)
+    unless @$originalInput.is('input[type=text],textarea')
       $.error("$.mentionsKinder works only on input[type=text] or textareas, was #{element && element.tagName}")
 
   _buildOptions: (options)->
@@ -35,13 +36,15 @@ class MentionsKinder
 
   _setupElements: ->
     @$wrap = $('<div class="mentions-kinder-wrap"></div>')
-    @$overlay = $('<div class="mentions-overlay"></div>')
-    @$hiddenInput = $("<input type='hidden' name='#{@$input.attr('name')}'/>")
-    @$input.attr('name', '')
-    @$wrap.insertAfter(@$input)
-    @$overlay.appendTo(@$wrap)
+    @$editable = $('<div class="mentions-kinder-input" contenteditable="plaintext-only"></div>')
+    @$input = $("<input type='hidden' name='#{@$originalInput.attr('name')}'/>")
+    @$wrap.insertAfter(@$originalInput)
+    @$originalInput.hide().appendTo(@$wrap)
     @$input.appendTo(@$wrap)
-    @$hiddenInput.appendTo(@$wrap)
+    @$editable.appendTo(@$wrap)
+
+  _setupSync: ->
+
 
 
 MentionsKinder.Autocompleter = Autocompleter

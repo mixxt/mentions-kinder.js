@@ -25,7 +25,7 @@ do ($ = jQuery) ->
       @elems = $('#qunit-fixture').children()
 
   test 'is chainable', ->
-    strictEqual @elems.mentionsKinder(), @elems, 'should be chainable'
+    equal @elems.mentionsKinder(), @elems, 'should be chainable'
 
   test 'sets data("mentionsKinder")', ->
     expect 2

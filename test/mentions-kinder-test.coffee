@@ -53,11 +53,11 @@ do ($ = jQuery) ->
       ok $(@).parent().hasClass('mentions-kinder-wrap'), 'input has mentions wrap parent'
       equal obj.$wrap[0], $(@).parent()[0], 'referenced $wrap equals input parent'
 
-  test 'it removes name from input', ->
+  test 'it hides input', ->
     expect 2
 
     @inputs.mentionsKinder().each ->
-      equal $(@).attr('name'), ""
+      ok $(@).is(':hidden')
 
   test 'it adds hidden input with name from input', ->
     expect 4

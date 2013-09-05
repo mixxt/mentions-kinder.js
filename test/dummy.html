@@ -7,10 +7,20 @@
     <script src="../libs/jquery-loader.js"></script>
     <!-- Load local lib and tests. -->
     <script src="../tmp/mentions-kinder.js"></script>
+
+    <style>
+        .mentions-kinder-wrap {
+        }
+        .mentions-kinder-input {
+            border: 1px solid #0099FF;
+            width: 300px;
+            height: 150px;
+        }
+    </style>
 </head>
 <body>
 <div style="margin: 20px;">
-    <textarea name="text1" style="width: 300px; height: 100px;"></textarea>
+    <textarea name="text1"></textarea>
 </div>
 <script>
     $.MentionsKinder.triggerDefaultOptions.autocompleter = $.MentionsKinder.Autocompleter.DummyAutocompleter;
