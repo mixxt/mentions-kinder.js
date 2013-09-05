@@ -6,12 +6,16 @@ class MentionsKinder
   # default options, exposed under $.mentionsKinder.defaultOptions
   defaultOptions:
     trigger:
-      '@': {} # inherit default
+      '@': {
+        triggerName: 'member'
+      } # inherit default
 
   triggerDefaultOptions:
       autocompleter: Autocompleter
-      # formatter
-      # serializer
+      formatter: (data)->
+        $('<button class="mention" disabled contenteditable="false">').text(data.name).prepend("<span style='color: lightblue'>#{data.trigger}</span>")
+      serializer: (data)->
+        "[#{data.trigger}#{data.name}](#{data.triggerOptions.triggerName}:#{data.value})"
 
   # le constructor
   constructor: (element, options)->
@@ -43,47 +47,57 @@ class MentionsKinder
 
   startAutocomplete: (triggerChar)->
     console.log "Start autocomplete for #{triggerChar}"
-    triggerOptions = @trigger[triggerChar]
-    @$tempMention = $("<span class='temp-mention'>#{triggerChar}</span>").appendTo @$editable
-    textNode = document.createTextNode(' ')
-    $(textNode).insertAfter(@$tempMention)
-    @_setCaretPosition(@$tempMention[0], 1)
+    @_current = {
+      trigger: triggerChar,
+      triggerOptions: @trigger[triggerChar],
+      $tempMention: $("<span class='temp-mention'>#{triggerChar}</span>").appendTo(@$editable)
+    }
 
-    @_autocompleter = new triggerOptions.autocompleter
-    @_autocompleter.done(@handleAutocompleteDone)
-    @_autocompleter.fail(@handleAutocompleteFail)
-    @_autocompleter.search('')
+    @_current.autocompleter = new @_current.triggerOptions.autocompleter
+    @_current.autocompleter.done(@handleAutocompleteDone)
+    @_current.autocompleter.fail(@handleAutocompleteFail)
+    @_current.autocompleter.search('')
+    
+    textNode = document.createTextNode(' ')
+    $(textNode).insertAfter(@_current.$tempMention)
+    @_setCaretPosition(@_current.$tempMention[0], 1)
 
   updateAutocomplete: ->
-    @_autocompleter.search(@$tempMention.text())
+    search = @_current.$tempMention.text().slice(@_current.trigger.length)
+    @_current.autocompleter.search(search)
 
   isAutocompleting: ->
-    !!@_autocompleter
+    @_current?
 
   abortAutocomplete: ->
-    @_autocompleter?.abort()
+    @isAutocompleting() && @_current.autocompleter.abort()
 
   handleAutocompleteDone: (data)=>
     console.log "Autocomplete done", data
-    @_autocompleter = null
-    $mention = $('<button class="mention" disabled contenteditable="false">').text(data.name).data('mentionData', data)
-    @$tempMention.replaceWith($mention)
-    @_setCaretPosition(@$editable[0], 1, $mention[0].nextSibling)
-    @$tempMention = null
 
-  handleAutocompleteFail: ()=>
+    data = $.extend({}, @_current, data)
+
+    # create mention
+    $mention = @_current.triggerOptions.formatter(data).data('serializedMention', @_current.triggerOptions.serializer(data))
+    # convert temp mention to mention
+    @_current.$tempMention.replaceWith($mention)
+    # set caret
+    @_setCaretPosition(@$editable[0], 1, $mention[0].nextSibling)
+
+    @_current = null
+
+  handleAutocompleteFail: =>
     console.log "Autocomplete fail"
-    @_autocompleter = null
 
     # store original caret position
-    placeCaret = if @_isCaretInTempMention() then @_getCaretPosition(@$tempMention[0])
-
-    textNode = document.createTextNode(@$tempMention.text())
-    @$tempMention.replaceWith(textNode)
-    @$tempMention = null
-
-    # set cursor to original position
+    placeCaret = if @_isCaretInTempMention() then @_getCaretPosition(@_current.$tempMention[0])
+    # convert to text
+    textNode = document.createTextNode(@_current.$tempMention.text())
+    @_current.$tempMention.replaceWith(textNode)
+    # set caret to original position
     @_setCaretPosition(@$editable[0], placeCaret, textNode) if placeCaret
+
+    @_current = null
 
   _ensureInput: (element)->
     @$originalInput = $(element)
@@ -126,7 +140,7 @@ class MentionsKinder
     window.getSelection().baseOffset
 
   _isCaretInTempMention: ->
-    window.getSelection().baseNode?.parentElement == @$tempMention?[0]
+    @isAutocompleting() && window.getSelection().baseNode?.parentElement == @_current.$tempMention[0]
 
 
 MentionsKinder.Autocompleter = Autocompleter

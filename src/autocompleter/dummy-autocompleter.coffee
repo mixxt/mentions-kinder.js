@@ -5,6 +5,7 @@
 class Autocompleter.DummyAutocompleter extends Autocompleter
   timeout: 2000
   search: (string)->
+    console.log "search", string
     clearTimeout(@timer) if @timer
     value = ~~(Math.random() * 1000) # dummy val
     @timer = setTimeout((=>
