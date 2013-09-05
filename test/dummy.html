@@ -20,9 +20,10 @@
             font-family: "Helvetica Neue",Helvetica,Arial,sans-serif;
         }
 
-        input.debug {
+        textarea.debug-area {
             float: right;
             width: 300px;
+            min-height: 74px;
         }
 
         .label.mention {
@@ -53,9 +54,19 @@
     <p>Try @ or #</p>
 </div>
 <script>
+    $.fn.enableMyDebug = function(){
+      $(this).each(function(){
+          var $el = $(this),
+              instance = $el.data('mentionsKinder'),
+              $debugArea = $('<textarea class="debug-area form-control" readonly name="'+ instance.$input.attr('name') +'">');
+
+          instance.$input.replaceWith($debugArea);
+          instance.$input = $debugArea;
+        });
+    };
     // configure autocompleter
     $.MentionsKinder.triggerDefaultOptions.autocompleter = $.MentionsKinder.Autocompleter.DummyAutocompleter;
-    $('.simple').mentionsKinder();
+    $('.simple').mentionsKinder().enableMyDebug();
     $('.tags').mentionsKinder({
         trigger: {
             '#': {
@@ -63,7 +74,7 @@
                 // defaults are fine otherwise
             }
         }
-    });
+    }).enableMyDebug();
     $('.multiple').mentionsKinder({
         trigger: {
             '#': {
@@ -73,9 +84,7 @@
                 triggerName: 'member'
             }
         }
-    });
-
-    $('input:hidden').attr('type', 'text').addClass('debug form-control');
+    }).enableMyDebug();
 </script>
 </body>
 </html>
