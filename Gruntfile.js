@@ -45,7 +45,7 @@ module.exports = function(grunt) {
                     'tmp/src/mentions-kinder.js',
                     'tmp/src/jquery-plugin.js',
                     'tmp/src/autocompleter/dummy-autocompleter.js',
-                    'tmp/src/autocompleter/typeahead.js'
+                    'tmp/src/autocompleter/typeahead-autocompleter.js'
                 ],
                 dest: 'tmp/<%= pkg.name %>.js',
                 nonull: true
