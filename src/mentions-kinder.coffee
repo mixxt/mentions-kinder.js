@@ -2,7 +2,7 @@
   Base class
 ###
 class MentionsKinder
-  KEY = { BACKSPACE : 8, TAB : 9, RETURN : 13, ESC : 27, LEFT : 37, UP : 38, RIGHT : 39, DOWN : 40, COMMA : 188, SPACE : 32, HOME : 36, END : 35 }
+  KEY = { BACKSPACE: 8, TAB: 9, RETURN: 13, ESC: 27, LEFT: 37, UP: 38, RIGHT: 39, DOWN: 40, COMMA: 188, SPACE: 32, HOME: 36, END: 35 }
   # default options, exposed under $.mentionsKinder.defaultOptions
   defaultOptions:
     trigger:
@@ -11,11 +11,11 @@ class MentionsKinder
       } # inherit default
 
   triggerDefaultOptions:
-      autocompleter: Autocompleter
-      formatter: (data)->
-        $('<span class="mention label btn-primary active" disabled contenteditable="false">').text(data.name).prepend("<span class='#{data.triggerOptions.triggerName}-trigger'>#{data.trigger}</span>")
-      serializer: (data)->
-        "[#{data.trigger}#{data.name}](#{data.triggerOptions.triggerName}:#{data.value})"
+    autocompleter: Autocompleter
+    formatter: (data)->
+      $('<span class="mention label btn-primary active" disabled contenteditable="false">').text(data.name).prepend("<span class='#{data.triggerOptions.triggerName}-trigger'>#{data.trigger}</span>")
+    serializer: (data)->
+      "[#{data.trigger}#{data.name}](#{data.triggerOptions.triggerName}:#{data.value})"
 
   # le constructor
   constructor: (element, options)->
