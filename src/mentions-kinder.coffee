@@ -45,6 +45,9 @@ class MentionsKinder
     # abort if the cursor left the temp mention
     @abortAutocomplete() if !@_isCaretInTempMention()
 
+    # set plaintext to our hidden field
+    @populateInput()
+
   startAutocomplete: (triggerChar)->
     console.log "Start autocomplete for #{triggerChar}"
     @_current = {
@@ -56,6 +59,7 @@ class MentionsKinder
     @_current.autocompleter = new @_current.triggerOptions.autocompleter
     @_current.autocompleter.done(@handleAutocompleteDone)
     @_current.autocompleter.fail(@handleAutocompleteFail)
+    @_current.autocompleter.always(@populateInput)
     @_current.autocompleter.search('')
     
     textNode = document.createTextNode(' ')
@@ -98,6 +102,18 @@ class MentionsKinder
     @_setCaretPosition(@$editable[0], placeCaret, textNode) if placeCaret
 
     @_current = null
+
+  populateInput: =>
+    @$input?.val(@getSerializedText())
+
+  getSerializedText: ->
+    textNodes = []
+    for node in @$editable[0].childNodes
+      if node.nodeType == 3
+        textNodes.push node.data
+      else if serializedMention = $(node).data('serializedMention')
+        textNodes.push serializedMention
+    textNodes.join('')
 
   _ensureInput: (element)->
     @$originalInput = $(element)
