@@ -41,6 +41,7 @@ module.exports = function(grunt) {
             },
             dev: {
                 src: [
+                    'tmp/src/utils.js',
                     'tmp/src/autocompleter.js',
                     'tmp/src/mentions-kinder.js',
                     'tmp/src/jquery-plugin.js',

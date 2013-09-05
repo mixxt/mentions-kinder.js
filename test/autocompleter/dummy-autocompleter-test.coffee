@@ -31,6 +31,7 @@ do ($ = jQuery) ->
       ok data.value
       start()
 
-    autocompleter = new $.MentionsKinder.Autocompleter.DummyAutocompleter(callback)
+    autocompleter = new $.MentionsKinder.Autocompleter.DummyAutocompleter()
+    autocompleter.done(callback)
     autocompleter.timeout = 50
     autocompleter.search 'foo'
