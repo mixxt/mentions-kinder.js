@@ -31,6 +31,13 @@
             padding: .125em .35em;
         }
 
+        .mention .tag-trigger {
+            color: yellow;
+        }
+        .mention .member-trigger {
+            color: pink;
+        }
+
     </style>
 </head>
 <body>
@@ -52,14 +59,19 @@
     $('.tags').mentionsKinder({
         trigger: {
             '#': {
-                // defaults are fine
+                triggerName: 'tag'
+                // defaults are fine otherwise
             }
         }
     });
     $('.multiple').mentionsKinder({
         trigger: {
-            '#': {},
-            '@': {}
+            '#': {
+                triggerName: 'tag'
+            },
+            '@': {
+                triggerName: 'member'
+            }
         }
     });
 
