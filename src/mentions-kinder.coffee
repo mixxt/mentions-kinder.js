@@ -36,10 +36,12 @@ class MentionsKinder
   _setupElements: ->
     @$wrap = $('<div class="mentions-kinder-wrap"></div>')
     @$overlay = $('<div class="mentions-overlay"></div>')
+    @$hiddenInput = $("<input type='hidden' name='#{@$input.attr('name')}'/>")
+    @$input.attr('name', '')
     @$wrap.insertAfter(@$input)
     @$overlay.appendTo(@$wrap)
     @$input.appendTo(@$wrap)
-
+    @$hiddenInput.appendTo(@$wrap)
 
 
 MentionsKinder.Autocompleter = Autocompleter
