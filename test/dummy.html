@@ -2,7 +2,8 @@
 <html>
 <head>
     <meta charset="utf-8">
-    <title>mentions-kinder Test Suite</title>
+    <title>mentions-kinder Dummy</title>
+    <link href="http://netdna.bootstrapcdn.com/bootstrap/3.0.0/css/bootstrap.min.css" rel="stylesheet">
     <!-- Load local jQuery. This can be overridden with a ?jquery=___ param. -->
     <script src="../libs/jquery-loader.js"></script>
     <!-- Load local lib and tests. -->
@@ -13,19 +14,23 @@
             width: 620px;
         }
         .mentions-kinder-input {
-            border: 1px solid #0099FF;
             width: 300px;
-            min-height: 47px;
-        }
-        .temp-mention {
-            background-color: lightpink;
-            border: 1px solid lightblue;
+            min-height: 74px;
+            height: auto;
+            font-family: "Helvetica Neue",Helvetica,Arial,sans-serif;
         }
 
         input.debug {
             float: right;
             width: 300px;
         }
+
+        .label.mention {
+            font-size: 90%;
+            font-weight: normal;
+            padding: .125em .35em;
+        }
+
     </style>
 </head>
 <body>
@@ -58,7 +63,7 @@
         }
     });
 
-    $('input:hidden').attr('type', 'text').addClass('debug');
+    $('input:hidden').attr('type', 'text').addClass('debug form-control');
 </script>
 </body>
 </html>

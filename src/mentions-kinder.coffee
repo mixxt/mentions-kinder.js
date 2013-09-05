@@ -13,7 +13,7 @@ class MentionsKinder
   triggerDefaultOptions:
       autocompleter: Autocompleter
       formatter: (data)->
-        $('<button class="mention" disabled contenteditable="false">').text(data.name).prepend("<span style='color: lightblue'>#{data.trigger}</span>")
+        $('<span class="mention label btn-primary active" disabled contenteditable="false">').text(data.name).prepend("<span style='color: #f4f4f4'>#{data.trigger}</span>")
       serializer: (data)->
         "[#{data.trigger}#{data.name}](#{data.triggerOptions.triggerName}:#{data.value})"
 
@@ -50,7 +50,7 @@ class MentionsKinder
     @_current = {
       trigger: triggerChar,
       triggerOptions: @trigger[triggerChar],
-      $tempMention: $("<span class='temp-mention'>#{triggerChar}</span>").appendTo(@$editable)
+      $tempMention: $("<span class='mention temp-mention label btn-info active'>#{triggerChar}</span>").appendTo(@$editable)
     }
 
     @_current.autocompleter = new @_current.triggerOptions.autocompleter
@@ -115,7 +115,7 @@ class MentionsKinder
 
   _setupElements: ->
     @$wrap = $('<div class="mentions-kinder-wrap"></div>')
-    @$editable = $('<pre class="mentions-kinder-input" contenteditable="true"></pre>')
+    @$editable = $('<pre class="mentions-kinder-input form-control" contenteditable="true"></pre>')
     @$input = $("<input type='hidden' name='#{@$originalInput.attr('name')}'/>")
     @$wrap.insertAfter(@$originalInput)
     @$originalInput.hide().appendTo(@$wrap)
