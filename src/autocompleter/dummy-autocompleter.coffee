@@ -3,7 +3,7 @@
   simulating a user selecting something from the autocomplete
 ###
 class Autocompleter.DummyAutocompleter extends Autocompleter
-  timeout: 1000
+  timeout: 2000
   search: (string)->
     clearTimeout(@timer) if @timer
     value = ~~(Math.random() * 1000) # dummy val

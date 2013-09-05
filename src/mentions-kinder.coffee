@@ -25,30 +25,36 @@ class MentionsKinder
 
   handleInput: (e)=>
     char = String.fromCharCode(e.charCode)
-    if @isAutocompleting()
-      @autocomplete()
-    else
-      if @trigger[char]
-        e.preventDefault()
-        @startAutocomplete(char)
+    if !@isAutocompleting() && @trigger[char]
+      e.preventDefault()
+      @startAutocomplete(char)
 
-  handleKeydown: (e)=>
+  handleKeyup: (e)=>
+    if @isAutocompleting()
+      @updateAutocomplete()
+
     switch e.keyCode
+      # abort if escape is pressed
       when KEY.ESC
         @abortAutocomplete()
+
+    # abort if the cursor left the temp mention
+    @abortAutocomplete() if !@_isCaretInTempMention()
 
   startAutocomplete: (triggerChar)->
     console.log "Start autocomplete for #{triggerChar}"
     triggerOptions = @trigger[triggerChar]
     @$tempMention = $("<span class='temp-mention'>#{triggerChar}</span>").appendTo @$editable
-    @_setCaretPosition(@$tempMention, 1)
+    textNode = document.createTextNode(' ')
+    $(textNode).insertAfter(@$tempMention)
+    @_setCaretPosition(@$tempMention[0], 1)
+
     @_autocompleter = new triggerOptions.autocompleter
     @_autocompleter.done(@handleAutocompleteDone)
     @_autocompleter.fail(@handleAutocompleteFail)
     @_autocompleter.search('')
 
-  autocomplete: ->
-    console.log "autocomplete", @$tempMention.text()
+  updateAutocomplete: ->
     @_autocompleter.search(@$tempMention.text())
 
   isAutocompleting: ->
@@ -57,18 +63,27 @@ class MentionsKinder
   abortAutocomplete: ->
     @_autocompleter?.abort()
 
-  handleAutocompleteDone: =>
-    console.log "Autocomplete done"
+  handleAutocompleteDone: (data)=>
+    console.log "Autocomplete done", data
     @_autocompleter = null
-    $mention = $('<button class="mention" disabled contenteditable="false">').text(Utils.escape(@$tempMention.text()))
+    $mention = $('<button class="mention" disabled contenteditable="false">').text(data.name).data('mentionData', data)
     @$tempMention.replaceWith($mention)
+    @_setCaretPosition(@$editable[0], 1, $mention[0].nextSibling)
     @$tempMention = null
 
-  handleAutocompleteFail: =>
+  handleAutocompleteFail: ()=>
     console.log "Autocomplete fail"
     @_autocompleter = null
-    @$tempMention.replaceWith(Utils.escape(@$tempMention.text()))
+
+    # store original caret position
+    placeCaret = if @_isCaretInTempMention() then @_getCaretPosition(@$tempMention[0])
+
+    textNode = document.createTextNode(@$tempMention.text())
+    @$tempMention.replaceWith(textNode)
     @$tempMention = null
+
+    # set cursor to original position
+    @_setCaretPosition(@$editable[0], placeCaret, textNode) if placeCaret
 
   _ensureInput: (element)->
     @$originalInput = $(element)
@@ -86,7 +101,7 @@ class MentionsKinder
 
   _setupElements: ->
     @$wrap = $('<div class="mentions-kinder-wrap"></div>')
-    @$editable = $('<pre class="mentions-kinder-input" contenteditable="plaintext-only"></pre>')
+    @$editable = $('<pre class="mentions-kinder-input" contenteditable="true"></pre>')
     @$input = $("<input type='hidden' name='#{@$originalInput.attr('name')}'/>")
     @$wrap.insertAfter(@$originalInput)
     @$originalInput.hide().appendTo(@$wrap)
@@ -95,16 +110,23 @@ class MentionsKinder
 
   _setupEvents: ->
     @$editable.bind 'keypress', @handleInput
-    @$editable.bind 'keyup', @handleKeydown
+    @$editable.bind 'keyup', @handleKeyup
 
-  _setCaretPosition: ($element, position)->
-    $element[0].focus()
+  _setCaretPosition: (element, position, node)->
+    node ||= element.firstChild
+    element.focus()
     if document.selection
       sel = document.selection.createRange()
       sel.moveStart('character', position)
       sel.select()
     else
-      window.getSelection().collapse($element[0].firstChild, position)
+      window.getSelection().collapse(node, position)
+
+  _getCaretPosition: ->
+    window.getSelection().baseOffset
+
+  _isCaretInTempMention: ->
+    window.getSelection().baseNode?.parentElement == @$tempMention?[0]
 
 
 MentionsKinder.Autocompleter = Autocompleter
