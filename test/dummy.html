@@ -10,28 +10,55 @@
 
     <style>
         .mentions-kinder-wrap {
+            width: 620px;
         }
         .mentions-kinder-input {
             border: 1px solid #0099FF;
             width: 300px;
-            height: 150px;
+            min-height: 47px;
         }
         .temp-mention {
             background-color: lightpink;
             border: 1px solid lightblue;
         }
+
+        input.debug {
+            float: right;
+            width: 300px;
+        }
     </style>
 </head>
 <body>
 <div style="margin: 20px;">
-    <textarea name="text1"></textarea>
-</div>
-<div style="margin: 20px;">
-    <input type="text" name="text2">
+    <h4>Basic</h4>
+    <textarea class="simple" name="text1"></textarea>
+    <p>Try mentioning someone with @ prefix</p>
+    <h4>Different Trigger</h4>
+    <textarea class="tags" name="text1"></textarea>
+    <p>Try inputting tags with # prefix</p>
+    <h4>Multiple Triggers</h4>
+    <textarea class="multiple" name="text1"></textarea>
+    <p>Try @ or #</p>
 </div>
 <script>
+    // configure autocompleter
     $.MentionsKinder.triggerDefaultOptions.autocompleter = $.MentionsKinder.Autocompleter.DummyAutocompleter;
-    $('textarea, input:text').mentionsKinder()
+    $('.simple').mentionsKinder();
+    $('.tags').mentionsKinder({
+        trigger: {
+            '#': {
+                // defaults are fine
+            }
+        }
+    });
+    $('.multiple').mentionsKinder({
+        trigger: {
+            '#': {},
+            '@': {}
+        }
+    });
+
+    $('input:hidden').attr('type', 'text').addClass('debug');
 </script>
 </body>
 </html>
