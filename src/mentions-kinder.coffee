@@ -109,7 +109,7 @@ class MentionsKinder
   getSerializedText: ->
     textNodes = []
     for node in @$editable[0].childNodes
-      if node.nodeType == 3
+      if node.nodeType == 3 # nodeType 3 is a text node
         textNodes.push node.data
       else if serializedMention = $(node).data('serializedMention')
         textNodes.push serializedMention
