@@ -69,8 +69,15 @@ class MentionsKinder
     @_focusTempMention()
 
   updateAutocomplete: ->
-    search = @_current.$tempMention.text().slice(@_current.trigger.length)
-    @_current.autocompleter.search(search)
+    text = @_current.$tempMention.text()
+    triggerLength = @_current.trigger.length
+
+    # slice trigger off if text starts with it
+    if text.slice(0, triggerLength) == @_current.trigger
+      @_current.autocompleter.search(text.slice(triggerLength))
+    # else trigger char has been removed, abort
+    else
+      @abortAutocomplete()
 
   isAutocompleting: ->
     @_current?
