@@ -51,7 +51,7 @@ class MentionsKinder
     @populateInput()
 
   startAutocomplete: (triggerChar)->
-    console.log "Start autocomplete for #{triggerChar}"
+    console?.log "Start autocomplete for #{triggerChar}"
     @_current = {
       trigger: triggerChar,
       triggerOptions: @trigger[triggerChar],
@@ -86,7 +86,7 @@ class MentionsKinder
     @isAutocompleting() && @_current.autocompleter.abort()
 
   handleAutocompleteDone: (data)=>
-    console.log "Autocomplete done", data
+    console?.log "Autocomplete done", data
 
     # add current trigger state to data to allow access from formatters and serializers
     data = $.extend({}, @_current, data)
@@ -103,7 +103,7 @@ class MentionsKinder
     @_current = null
 
   handleAutocompleteFail: =>
-    console.log "Autocomplete fail"
+    console?.log "Autocomplete fail"
 
     # store original caret position
     placeCaret = if @_isCaretInTempMention() then @_getCaretPosition(@_current.$tempMention[0])
@@ -180,7 +180,6 @@ class MentionsKinder
   _isCaretInTempMention: ->
     if @isAutocompleting()
       if document.selection # ie8
-        console.log "caret position within tempMention #{ typeof @_current.$tempMention[0] } => #{ @_getCaretPositionWithin(@_current.$tempMention[0]) }"
         true
       else
         window.getSelection().baseNode?.parentElement == @_current.$tempMention[0]
