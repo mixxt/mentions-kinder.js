@@ -116,8 +116,9 @@ class MentionsKinder
     @_current = null
 
   populateInput: =>
-    console.log "Populate input with '#{@serializeEditable()}'"
-    @$input?.val(@serializeEditable())
+    val = @serializeEditable()
+    @$originalInput.val(val)
+    @$input?.val(val)
 
   serializeEditable: ->
     textNodes = []
@@ -130,7 +131,7 @@ class MentionsKinder
 
   deserializeInput: ->
     # TODO implement
-    @$input.val()
+    document.createTextNode(@$originalInput.val())
 
   _ensureInput: (element)->
     @$originalInput = $(element)
@@ -150,12 +151,13 @@ class MentionsKinder
     @$wrap = $('<div class="mentions-kinder-wrap"></div>')
     @$editable = $('<pre class="mentions-kinder-input form-control" contenteditable="true"></pre>')
     @$input = $("<input type='hidden' name='#{@$originalInput.attr('name')}'/>")
+    @$input.val(@$originalInput.val())
+    @$editable.addClass(@$originalInput.attr("class")).html(@deserializeInput())
+
     @$wrap.insertAfter(@$originalInput)
     @$originalInput.hide().appendTo(@$wrap)
     @$input.appendTo(@$wrap)
     @$editable.appendTo(@$wrap)
-    @$editable.html(@deserializeInput())
-    @populateInput()
 
   _setupEvents: ->
     @$editable.bind 'keypress', @handleInput
