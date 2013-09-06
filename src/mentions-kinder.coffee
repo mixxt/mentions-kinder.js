@@ -116,9 +116,10 @@ class MentionsKinder
     @_current = null
 
   populateInput: =>
-    @$input?.val(@getSerializedText())
+    console.log "Populate input with '#{@serializeEditable()}'"
+    @$input?.val(@serializeEditable())
 
-  getSerializedText: ->
+  serializeEditable: ->
     textNodes = []
     for node in @$editable[0].childNodes
       if node.nodeType == 3 # nodeType 3 is a text node
@@ -126,6 +127,10 @@ class MentionsKinder
       else if serializedMention = $(node).data('serializedMention')
         textNodes.push serializedMention
     textNodes.join('')
+
+  deserializeInput: ->
+    # TODO implement
+    @$input.val()
 
   _ensureInput: (element)->
     @$originalInput = $(element)
@@ -149,6 +154,8 @@ class MentionsKinder
     @$originalInput.hide().appendTo(@$wrap)
     @$input.appendTo(@$wrap)
     @$editable.appendTo(@$wrap)
+    @$editable.html(@deserializeInput())
+    @populateInput()
 
   _setupEvents: ->
     @$editable.bind 'keypress', @handleInput
