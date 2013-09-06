@@ -80,6 +80,13 @@ module.exports = function(grunt) {
                 tasks:['test']
             }
         },
+        connect: {
+            server: {
+                options: {
+                    port: 1338
+                }
+            }
+        }
     });
 
     // These plugins provide necessary tasks.
@@ -89,11 +96,13 @@ module.exports = function(grunt) {
     grunt.loadNpmTasks('grunt-contrib-clean');
     grunt.loadNpmTasks('grunt-contrib-qunit');
     grunt.loadNpmTasks('grunt-contrib-watch');
+    grunt.loadNpmTasks('grunt-contrib-connect');
 
     // Default task.
     grunt.registerTask('precompile', ['coffee:dev', 'coffee:test', 'concat:dev']);
     grunt.registerTask('dist', ['coffee:dev', 'coffee:test', 'concat:dist', 'uglify:dist']);
     grunt.registerTask('test', ['precompile', 'qunit']);
+    grunt.registerTask('server', ['precompile', 'connect:server', 'watch']);
     grunt.registerTask('default', 'test');
 
 };
