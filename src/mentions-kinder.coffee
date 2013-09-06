@@ -88,10 +88,13 @@ class MentionsKinder
   handleAutocompleteDone: (data)=>
     console.log "Autocomplete done", data
 
+    # add current trigger state to data to allow access from formatters and serializers
     data = $.extend({}, @_current, data)
 
     # create mention
-    $mention = @_current.triggerOptions.formatter(data).data('serializedMention', @_current.triggerOptions.serializer(data))
+    $mention = @_current.triggerOptions.formatter(data)
+    serializedMention = @_current.triggerOptions.serializer(data)
+    $mention.data('serializedMention', serializedMention)
     # convert temp mention to mention
     @_current.$tempMention.replaceWith($mention)
     # set caret
