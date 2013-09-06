@@ -178,7 +178,12 @@ class MentionsKinder
     window.getSelection?().baseOffset
 
   _isCaretInTempMention: ->
-    @isAutocompleting() && window.getSelection().baseNode?.parentElement == @_current.$tempMention[0]
+    if @isAutocompleting()
+      if document.selection # ie8
+        console.log "caret position within tempMention #{ typeof @_current.$tempMention[0] } => #{ @_getCaretPositionWithin(@_current.$tempMention[0]) }"
+        true
+      else
+        window.getSelection().baseNode?.parentElement == @_current.$tempMention[0]
 
 
 MentionsKinder.Autocompleter = Autocompleter
