@@ -1,6 +1,7 @@
 <!DOCTYPE html>
 <html>
 <head>
+    <meta http-equiv="X-UA-Compatible" content="IE=Edge" />
     <meta charset="utf-8">
     <title>mentions-kinder Dummy</title>
     <link href="//netdna.bootstrapcdn.com/bootstrap/3.0.0/css/bootstrap.min.css" rel="stylesheet">
@@ -55,7 +56,7 @@
 </div>
 <script>
     $.fn.enableMyDebug = function(){
-      $(this).each(function(){
+      return $(this).each(function(){
           var $el = $(this),
               instance = $el.data('mentionsKinder'),
               $debugArea = $('<textarea class="debug-area form-control" readonly name="'+ instance.$input.attr('name') +'">');
@@ -66,7 +67,7 @@
     };
     // configure autocompleter
     $.MentionsKinder.triggerDefaultOptions.autocompleter = $.MentionsKinder.Autocompleter.DummyAutocompleter;
-    $('.simple').mentionsKinder().enableMyDebug();
+    simple = $('.simple').mentionsKinder().enableMyDebug().data('mentionsKinder');
     $('.tags').mentionsKinder({
         trigger: {
             '#': {
