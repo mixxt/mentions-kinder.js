@@ -29,7 +29,8 @@ class MentionsKinder
     window.foo = @
 
   handleInput: (e)=>
-    char = String.fromCharCode(e.charCode)
+    charCode = e.charCode || e.which || e.keyCode
+    char = String.fromCharCode(charCode)
     if !@isAutocompleting() && @trigger[char]
       e.preventDefault()
       @startAutocomplete(char)
