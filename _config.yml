@@ -1,3 +1,4 @@
 name: mentions-kinder.js
+baseurl: /mentions-kinder.js/
 markdown: redcarpet
 pygments: true
