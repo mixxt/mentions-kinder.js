@@ -175,7 +175,7 @@ class MentionsKinder
     window.getSelection?().collapse(node, position)
 
   _getCaretPosition: ->
-    window.getSelection().baseOffset
+    window.getSelection?().baseOffset
 
   _isCaretInTempMention: ->
     @isAutocompleting() && window.getSelection().baseNode?.parentElement == @_current.$tempMention[0]
