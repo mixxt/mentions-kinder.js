@@ -66,7 +66,7 @@ class MentionsKinder
     
     textNode = document.createTextNode(' ')
     $(textNode).insertAfter(@_current.$tempMention)
-    @_setCaretPosition(@_current.$tempMention[0], 1)
+    @_focusTempMention()
 
   updateAutocomplete: ->
     search = @_current.$tempMention.text().slice(@_current.trigger.length)
@@ -144,15 +144,25 @@ class MentionsKinder
     @$editable.bind 'keypress', @handleInput
     @$editable.bind 'keyup', @handleKeyup
 
+  _focusTempMention: ->
+    if @isAutocompleting()
+      element = @_current.$tempMention[0]
+      node = element.firstChild
+      offset = @_current.trigger.length
+      # ie8
+      if document.selection
+        element.focus()
+        node.nodeValue = node.nodeValue + ' '
+        range = document.body.createTextRange()
+        range.moveToElementText(element)
+        range.moveStart('character', offset)
+        range.select()
+      else
+        @_setCaretPosition(element, offset, node)
+
   _setCaretPosition: (element, position, node)->
     node ||= element.firstChild
-    element.focus()
-    if document.selection
-      sel = document.selection.createRange()
-      sel.moveStart('character', position)
-      sel.select()
-    else
-      window.getSelection().collapse(node, position)
+    window.getSelection?().collapse(node, position)
 
   _getCaretPosition: ->
     window.getSelection().baseOffset
