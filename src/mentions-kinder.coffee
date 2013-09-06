@@ -13,7 +13,8 @@ class MentionsKinder
   triggerDefaultOptions:
     autocompleter: Autocompleter
     formatter: (data)->
-      $('<span class="mention label btn-primary active" disabled contenteditable="false">').text(data.name).prepend("<span class='#{data.triggerOptions.triggerName}-trigger'>#{data.trigger}</span>")
+      $trigger = $("<span class='#{data.triggerOptions.triggerName}-trigger'></span>").text(data.trigger)
+      $('<span class="mention label btn-primary active" disabled contenteditable="false"></span>').text(data.name).prepend($trigger)
     serializer: (data)->
       "[#{data.trigger}#{data.name}](#{data.triggerOptions.triggerName}:#{data.value})"
 
