@@ -21,6 +21,7 @@
 
 do ($ = jQuery) ->
   module '$.MentionsKinder.Autocompleter.Typeahead'
-
+###
   test 'is available', ->
-    ok $.MentionsKinder.Autocompleter.Typeahead, 'Typeahead class is available'
+    ok $.MentionsKinder.Autocompleter.Typeahead, 'Typeahead class should be available'
+###

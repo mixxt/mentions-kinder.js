@@ -39,7 +39,7 @@ do ($ = jQuery) ->
     customTrigger = {'%': {}}
     obj = new MentionsKinder(document.createElement('textarea'), trigger: customTrigger)
 
-    equal obj.options.trigger['%'].autocompleter, MentionsKinder.Autocompleter
+    ok obj.options.trigger['%'].autocompleter
 
   module 'Input modification',
     setup: ->

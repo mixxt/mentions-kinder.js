@@ -45,7 +45,9 @@ module.exports = function(grunt) {
                     'tmp/src/mentions-kinder.js',
                     'tmp/src/jquery-plugin.js',
                     'tmp/src/autocompleter/dummy-autocompleter.js',
-                    'tmp/src/autocompleter/typeahead-autocompleter.js'
+                    'src/extend-patch.js',
+                    'tmp/src/autocompleter/select2-autocompleter.js'
+//                    'tmp/src/autocompleter/typeahead-autocompleter.js'
                 ],
                 dest: 'tmp/<%= pkg.name %>.js',
                 nonull: true
@@ -56,7 +58,9 @@ module.exports = function(grunt) {
                     'tmp/src/mentions-kinder.js',
                     'tmp/src/jquery-plugin.js',
                     'tmp/src/autocompleter/dummy-autocompleter.js',
-                    'tmp/src/autocompleter/typeahead-autocompleter.js'
+                    'src/extend-patch.js',
+                    'tmp/src/autocompleter/select2-autocompleter.js'
+//                    'tmp/src/autocompleter/typeahead-autocompleter.js'
                 ],
                 dest: 'dist/<%= pkg.name %>.js',
                 nonull: true

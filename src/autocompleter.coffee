@@ -2,7 +2,9 @@
   Autocompleter Base
 ###
 class Autocompleter
-  constructor: ->
+  constructor: (options = {})->
+    @mentionsKind = options.mentionsKind
+    @options = options
     @initialize()
     @deferred = $.Deferred()
     @deferred.promise(@)

@@ -58,7 +58,7 @@ class MentionsKinder
       $tempMention: $("<span class='mention temp-mention label btn-info active'>#{triggerChar}</span>").appendTo(@$editable)
     }
 
-    @_current.autocompleter = new @_current.triggerOptions.autocompleter
+    @_current.autocompleter = new @_current.triggerOptions.autocompleter(mentionsKind: @)
     @_current.autocompleter.done(@handleAutocompleteDone)
     @_current.autocompleter.fail(@handleAutocompleteFail)
     @_current.autocompleter.always(@populateInput)
@@ -111,7 +111,10 @@ class MentionsKinder
     textNode = document.createTextNode(@_current.$tempMention.text())
     @_current.$tempMention.replaceWith(textNode)
     # set caret to original position
-    @_setCaretPosition(@$editable[0], placeCaret, textNode) if placeCaret
+    if placeCaret
+      @_setCaretPosition(@$editable[0], placeCaret, textNode)
+    else
+      @_setCaretPosition(@$editable[0], textNode.length, textNode)
 
     @_current = null
 
