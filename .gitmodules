@@ -3,4 +3,4 @@
 	url = https://github.com/ivaynberg/select2.git
 [submodule "doc"]
 	path = doc
-	url = git@github.com:mixxt/mentions-kinder.js.git
+	url = git://github.com:mixxt/mentions-kinder.js.git
