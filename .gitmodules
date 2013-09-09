@@ -1,3 +1,6 @@
 [submodule "libs/select2"]
 	path = libs/select2
 	url = https://github.com/ivaynberg/select2.git
+[submodule "doc"]
+	path = doc
+	url = git@github.com:mixxt/mentions-kinder.js.git

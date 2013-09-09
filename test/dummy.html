@@ -5,44 +5,16 @@
     <meta charset="utf-8">
     <title>mentions-kinder Dummy</title>
     <link href="//netdna.bootstrapcdn.com/bootstrap/3.0.0/css/bootstrap.min.css" rel="stylesheet">
-    <link href="../libs/select2/select2.css" rel="stylesheet">
+    <link href="//cdnjs.cloudflare.com/ajax/libs/select2/3.4.1/select2.min.css" rel="stylesheet">
+    <link href="../doc/dist/mentions-kinder.css" rel="stylesheet">
+    <link href="../doc/css/layout.css" rel="stylesheet">
     <!-- Load local jQuery. This can be overridden with a ?jquery=___ param. -->
     <script src="../libs/jquery-loader.js"></script>
-    <script src="../libs/select2/select2.js"></script>
+    <script src="../doc/js/debug.js"></script>
+    <script src="//cdnjs.cloudflare.com/ajax/libs/select2/3.4.1/select2.min.js"></script>
     <!-- Load local lib and tests. -->
     <script src="../tmp/mentions-kinder.js"></script>
 
-    <style>
-        .mentions-kinder-wrap {
-            width: 620px;
-        }
-        .mentions-kinder-input {
-            width: 300px;
-            min-height: 74px;
-            height: auto;
-            font-family: "Helvetica Neue",Helvetica,Arial,sans-serif;
-        }
-
-        textarea.debug-area {
-            float: right;
-            width: 300px;
-            min-height: 74px;
-        }
-
-        .label.mention {
-            font-size: 90%;
-            font-weight: normal;
-            padding: .125em .35em;
-        }
-
-        .mention .tag-trigger {
-            color: yellow;
-        }
-        .mention .member-trigger {
-            color: pink;
-        }
-
-    </style>
 </head>
 <body>
 <div style="margin: 20px;">
@@ -57,17 +29,6 @@
     <p>Try @ or #</p>
 </div>
 <script>
-    $.fn.enableMyDebug = function(){
-      return $(this).each(function(){
-          var $el = $(this),
-              instance = $el.data('mentionsKinder'),
-              $debugArea = $('<textarea class="debug-area form-control" readonly name="'+ instance.$input.attr('name') +'"></textarea>');
-
-          instance.$input.replaceWith($debugArea);
-          $debugArea.val(instance.$input.val());
-          instance.$input = $debugArea;
-        });
-    };
 
     // configure autocompleter
     var simpsonAutocompleter = $.MentionsKinder.Autocompleter.Select2Autocompleter.extend({

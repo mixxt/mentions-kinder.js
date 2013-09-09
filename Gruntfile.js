@@ -102,9 +102,15 @@ module.exports = function(grunt) {
     grunt.loadNpmTasks('grunt-contrib-watch');
     grunt.loadNpmTasks('grunt-contrib-connect');
 
+    grunt.registerTask('page:dist', function(){
+        var source = grunt.config.get('uglify.dist.dest'),
+            destination = "doc/js/"+source;
+        grunt.file.copy(source, destination)
+    });
+
     // Default task.
     grunt.registerTask('precompile', ['coffee:dev', 'coffee:test', 'concat:dev']);
-    grunt.registerTask('dist', ['coffee:dev', 'coffee:test', 'concat:dist', 'uglify:dist']);
+    grunt.registerTask('dist', ['coffee:dev', 'coffee:test', 'concat:dist', 'uglify:dist', 'page:dist']);
     grunt.registerTask('test', ['precompile', 'qunit']);
     grunt.registerTask('server', ['precompile', 'connect:server', 'watch']);
     grunt.registerTask('default', 'test');
