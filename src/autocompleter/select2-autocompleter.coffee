@@ -10,12 +10,10 @@ Autocompleter.Select2Autocompleter = Autocompleter.extend {
     @_setupInput()
 
     @$input.on 'select2-selecting', (e)=>
-      console.log "selecting", e
       @complete.call(@, e.object)
       @$input.select2('destroy').remove()
 
     @$input.on 'select2-close', (e)=>
-      console.log "close", e
       @abort.call(@)
       @$input.select2('destroy').remove()
 
