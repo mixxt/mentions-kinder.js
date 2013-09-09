@@ -5,7 +5,8 @@
   "version": "0.1.0-alpha1",
   "homepage": "https://mixxt.github.io/mentions-kinder.js",
   "author": {
-    "name": "Christoph",
+    "name": "Christoph Geschwind",
+    "company": "mixxt GmbH",
     "email": "christoph@mixxt.net",
     "url": "www.mixxt.de"
   },
