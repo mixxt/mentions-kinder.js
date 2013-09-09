@@ -11,6 +11,9 @@ class Autocompleter
 
   initialize: ->
 
+  complete: (data)->
+    @deferred.resolve(data)
+
   abort: ->
     @deferred.reject()
 

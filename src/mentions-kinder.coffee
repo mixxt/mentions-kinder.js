@@ -50,6 +50,14 @@ class MentionsKinder
     # set plaintext to our hidden field
     @populateInput()
 
+  handlePaste: =>
+    # defer, content is not in yet
+    setTimeout(@cleanEditable, 0)
+
+  # un**** our editable after paste or other ****
+  cleanEditable: =>
+    @cleanChildNodes(@$editable[0])
+
   startAutocomplete: (triggerChar)->
     console?.log "Start autocomplete for #{triggerChar}"
     @_current = {
@@ -94,7 +102,7 @@ class MentionsKinder
     # create mention
     $mention = @_current.triggerOptions.formatter(data)
     serializedMention = @_current.triggerOptions.serializer(data)
-    $mention.data('serializedMention', serializedMention)
+    $mention.attr('serialized-mention', serializedMention)
     # convert temp mention to mention
     @_current.$tempMention.replaceWith($mention)
     # set caret
@@ -124,13 +132,46 @@ class MentionsKinder
     @$input?.val(val)
 
   serializeEditable: ->
+    @serializeNode(@$editable[0]).join('')
+
+  serializeNode: (parentNode)->
     textNodes = []
-    for node in @$editable[0].childNodes
+    for node in parentNode.childNodes
       if node.nodeType == 3 # nodeType 3 is a text node
         textNodes.push node.data
-      else if serializedMention = $(node).data('serializedMention')
+      else if serializedMention = $(node).attr('serialized-mention')
         textNodes.push serializedMention
-    textNodes.join('')
+      else
+        textNodes = textNodes.concat @serializeNode(node)
+    textNodes
+
+  # if we remove items from nodeList it is updated live, that results in missed nodes
+  # therefore we save the node references in an array and iterate over that
+  cloneReferences = (nodes)->
+    for node in nodes
+      node
+
+  # iterate over child nodes and clean them
+  cleanChildNodes: (parentNode)->
+    for node in cloneReferences(parentNode.childNodes)
+      @cleanNode(node)
+
+    true
+
+  # clean a single node
+  # recurses into child nodes
+  cleanNode: (node)->
+    # dont clean text nodes or mention nodes
+    unless node.nodeType == 3 || $(node).attr('serialized-mention')
+      # clean all children and replace node with them
+      if node.childNodes?.length > 0
+        @cleanChildNodes(node)
+        $(node).replaceWith(node.childNodes)
+      # remove node
+      else
+        $(node).remove()
+
+    true
 
   deserializeInput: ->
     # TODO implement
@@ -165,6 +206,7 @@ class MentionsKinder
   _setupEvents: ->
     @$editable.bind 'keypress', @handleInput
     @$editable.bind 'keyup', @handleKeyup
+    @$editable.bind 'paste', @handlePaste
 
   _focusTempMention: ->
     if @isAutocompleting()
