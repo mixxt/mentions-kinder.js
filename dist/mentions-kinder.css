@@ -1,0 +1,11 @@
+
+.mentions-kinder-input {
+    height: auto;
+    font-family: "Helvetica Neue",Helvetica,Arial,sans-serif;
+}
+
+.label.mention {
+    font-size: 90%;
+    font-weight: normal;
+    padding: .125em .35em;
+}

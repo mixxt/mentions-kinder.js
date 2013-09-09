@@ -1,7 +1,66 @@
 ---
 layout: default
-title: WIP
+title: mentions-kinder.js simple demo
 ---
 
-<h1>Hello World!</h1>
-<p>Work in Progress!</p>
+<h1>{{page.title}}</h1>
+
+<h4>Basic</h4>
+<textarea class="simple" name="text1"></textarea>
+<p>Try mentioning someone with @ prefix</p>
+<h4>Different Trigger</h4>
+<textarea class="tags" name="text1"></textarea>
+<p>Try inputting tags with # prefix</p>
+<h4>Multiple Triggers</h4>
+<textarea class="multiple" name="text1"></textarea>
+<p>Try @ or #</p>
+<script>
+
+    // configure autocompleter by extending from a base autocompleter
+    var simpsonAutocompleter = $.MentionsKinder.Autocompleter.Select2Autocompleter.extend({
+        select2Options: {
+            data: [
+                {id:'homer',text:'Homer Jay Simpson'},
+                {id:'marge',text:'Marjorie Simpson'},
+                {id:'bart',text:'Bartholomew JoJo Simpson'},
+                {id:'lisa',text:'Lisa Marie Simpson'},
+                {id:'maggie',text:'Margaret Simpson'}
+            ]
+        }
+    });
+    var tagAutocompleter = $.MentionsKinder.Autocompleter.Select2Autocompleter.extend({
+        select2Options: {
+            tags: ["red", "green", "blue"]
+        }
+    });
+
+    // Setup some default options
+    // if no options are provided, use @ with simpsonsAutocompleter only
+    $.MentionsKinder.defaultOptions.trigger['@'].autocompleter = simpsonAutocompleter;
+
+    // Init our simplest input by using defaults
+    $('.simple').mentionsKinder().enableMyDebug();
+    // Init customized input with tag autocompleter
+    $('.tags').mentionsKinder({
+        trigger: {
+            '#': {
+                triggerName: 'tag',
+                autocompleter: tagAutocompleter
+            }
+        }
+    }).enableMyDebug();
+    // Init customized input using two different trigger chars
+    $('.multiple').mentionsKinder({
+        trigger: {
+            '#': {
+                triggerName: 'tag',
+                autocompleter: tagAutocompleter
+            },
+            '@': {
+                triggerName: 'member',
+                autocompleter: simpsonAutocompleter
+            }
+        }
+    }).enableMyDebug();
+
+</script>

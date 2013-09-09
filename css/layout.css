@@ -1,0 +1,25 @@
+body {
+    padding-top: 50px;
+}
+
+
+.mentions-kinder-wrap {
+    width: 620px;
+}
+.mentions-kinder-input {
+    width: 300px;
+    min-height: 74px;
+}
+
+textarea.debug-area {
+    float: right;
+    width: 300px;
+    min-height: 74px;
+}
+
+.mention .tag-trigger {
+    color: yellow;
+}
+.mention .member-trigger {
+    color: pink;
+}
