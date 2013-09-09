@@ -1,4 +1,6 @@
-.idea/
 /node_modules/
 /tmp/
+/doc/
+
+.idea
 .DS_Store
