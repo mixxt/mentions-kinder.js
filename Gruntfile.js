@@ -102,15 +102,22 @@ module.exports = function(grunt) {
     grunt.loadNpmTasks('grunt-contrib-watch');
     grunt.loadNpmTasks('grunt-contrib-connect');
 
-    grunt.registerTask('page:dist', function(){
-        var source = grunt.config.get('uglify.dist.dest'),
-            destination = "doc/js/"+source;
-        grunt.file.copy(source, destination)
+    grunt.registerTask('doc:dist', function(){
+        if(grunt.file.exists('doc')){
+            var source = grunt.config.get('uglify.dist.dest'),
+                destination = "doc/js/"+source;
+            grunt.file.copy(source, destination)
+        }
+        else {
+            var repo = "git@github.com:mixxt/mentions-kinder.js.git",
+                options = "--branch gh-pages --single-branch";
+            grunt.fail.warn("doc folder not found, run this first:\n\n\t git clone "+ options +" "+ repo +" doc\n\n");
+        }
     });
 
     // Default task.
     grunt.registerTask('precompile', ['coffee:dev', 'coffee:test', 'concat:dev']);
-    grunt.registerTask('dist', ['coffee:dev', 'coffee:test', 'concat:dist', 'uglify:dist', 'page:dist']);
+    grunt.registerTask('dist', ['coffee:dev', 'coffee:test', 'concat:dist', 'uglify:dist', 'doc:dist']);
     grunt.registerTask('test', ['precompile', 'qunit']);
     grunt.registerTask('server', ['precompile', 'connect:server', 'watch']);
     grunt.registerTask('default', 'test');
