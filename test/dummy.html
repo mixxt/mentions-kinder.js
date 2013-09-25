@@ -10,8 +10,9 @@
     <link href="../doc/css/layout.css" rel="stylesheet">
     <!-- Load local jQuery. This can be overridden with a ?jquery=___ param. -->
     <script src="../libs/jquery-loader.js"></script>
+    <script src="../libs/rangy-1.2.3/uncompressed/rangy-core.js"></script>
     <script src="../doc/js/debug.js"></script>
-    <script src="//cdnjs.cloudflare.com/ajax/libs/select2/3.4.1/select2.min.js"></script>
+    <!--<script src="//cdnjs.cloudflare.com/ajax/libs/select2/3.4.1/select2.min.js"></script>-->
     <!-- Load local lib and tests. -->
     <script src="../tmp/mentions-kinder.js"></script>
 
@@ -22,42 +23,43 @@
     <textarea class="simple" name="text1"></textarea>
     <p>Try mentioning someone with @ prefix</p>
     <h4>Different Trigger</h4>
-    <textarea class="tags" name="text1"></textarea>
+    <textarea class="tags" name="text2"></textarea>
     <p>Try inputting tags with # prefix</p>
     <h4>Multiple Triggers</h4>
-    <textarea class="multiple" name="text1"></textarea>
+    <textarea class="multiple" name="text3"></textarea>
     <p>Try @ or #</p>
 </div>
 <script>
-
+$(function(){
     // configure autocompleter
-    var simpsonAutocompleter = $.MentionsKinder.Autocompleter.Select2Autocompleter.extend({
-        select2Options: {
-            data: [
-                {id:'homer',text:'Homer Jay Simpson'},
-                {id:'marge',text:'Marjorie Simpson'},
-                {id:'bart',text:'Bartholomew JoJo Simpson'},
-                {id:'lisa',text:'Lisa Marie Simpson'},
-                {id:'maggie',text:'Margaret Simpson'}
-            ]
-        }
-    });
-
-    var tagAutocompleter = $.MentionsKinder.Autocompleter.Select2Autocompleter.extend({
-        select2Options: {
-            tags: ["red", "green", "blue"]
-        }
-    });
-
-    // if no options are provided, use @ with simpsonsAutocompleter only
-    $.MentionsKinder.defaultOptions.trigger['@'].autocompleter = simpsonAutocompleter;
+//    var simpsonAutocompleter = $.MentionsKinder.Autocompleter.Select2Autocompleter.extend({
+//        select2Options: {
+//            data: [
+//                {id:'homer',text:'Homer Jay Simpson'},
+//                {id:'marge',text:'Marjorie Simpson'},
+//                {id:'bart',text:'Bartholomew JoJo Simpson'},
+//                {id:'lisa',text:'Lisa Marie Simpson'},
+//                {id:'maggie',text:'Margaret Simpson'}
+//            ]
+//        }
+//    });
+//
+//    var tagAutocompleter = $.MentionsKinder.Autocompleter.Select2Autocompleter.extend({
+//        select2Options: {
+//            tags: ["red", "green", "blue"]
+//        }
+//    });
+//
+//    // if no options are provided, use @ with simpsonsAutocompleter only
+//    $.MentionsKinder.defaultOptions.trigger['@'].autocompleter = simpsonAutocompleter;
+    $.MentionsKinder.triggerDefaultOptions.autocompleter = $.MentionsKinder.Autocompleter.DummyAutocompleter;
 
     simple = $('.simple').mentionsKinder().enableMyDebug().data('mentionsKinder');
     $('.tags').mentionsKinder({
         trigger: {
             '#': {
                 triggerName: 'tag',
-                autocompleter: tagAutocompleter
+//                autocompleter: tagAutocompleter
             }
         }
     }).enableMyDebug();
@@ -65,14 +67,15 @@
         trigger: {
             '#': {
                 triggerName: 'tag',
-                autocompleter: tagAutocompleter
+//                autocompleter: tagAutocompleter
             },
             '@': {
                 triggerName: 'member',
-                autocompleter: simpsonAutocompleter
+//                autocompleter: simpsonAutocompleter
             }
         }
     }).enableMyDebug();
+});
 </script>
 </body>
 </html>

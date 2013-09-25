@@ -14,7 +14,8 @@ class MentionsKinder
     autocompleter: Autocompleter
     formatter: (data)->
       $trigger = $("<span class='#{data.triggerOptions.triggerName}-trigger'></span>").text(data.trigger)
-      $('<span class="mention label btn-primary active" disabled contenteditable="false"></span>').text(data.name).prepend($trigger)
+      $value = $("<span class='#{data.triggerOptions.triggerName}-value'></span>").text(data.name)
+      $('<span class="mention btn-primary active" disabled contenteditable="false"></span>').append($trigger).append($value)
     serializer: (data)->
       "[#{data.trigger}#{data.name}](#{data.triggerOptions.triggerName}:#{data.value})"
 
@@ -45,7 +46,9 @@ class MentionsKinder
         @abortAutocomplete()
 
     # abort if the cursor left the temp mention
-    @abortAutocomplete() if !@_isCaretInTempMention()
+    if @isAutocompleting() && !@_isCaretInTempMention()
+      console.log "caret left temp mention, aborting"
+      @abortAutocomplete()
 
     # set plaintext to our hidden field
     @populateInput()
@@ -63,18 +66,22 @@ class MentionsKinder
     @_current = {
       trigger: triggerChar,
       triggerOptions: @trigger[triggerChar],
-      $tempMention: $("<span class='mention temp-mention label btn-info active'>#{triggerChar}</span>").appendTo(@$editable)
+      $tempMention: $("<span class='mention temp-mention label btn-info active'>#{triggerChar}</span>")
     }
+
+    tempMention = @_current.$tempMention.get(0)
+    selection = rangy.getSelection()
+    range = selection.getRangeAt(0)
+    range.insertNode(tempMention)
+    range.selectNodeContents(tempMention)
+    selection.setSingleRange(range)
+    selection.collapseToEnd()
 
     @_current.autocompleter = new @_current.triggerOptions.autocompleter(mentionsKind: @)
     @_current.autocompleter.done(@handleAutocompleteDone)
     @_current.autocompleter.fail(@handleAutocompleteFail)
     @_current.autocompleter.always(@populateInput)
     @_current.autocompleter.search('')
-    
-    textNode = document.createTextNode(' ')
-    $(textNode).insertAfter(@_current.$tempMention)
-    @_focusTempMention()
 
   updateAutocomplete: ->
     text = @_current.$tempMention.text()
@@ -103,26 +110,24 @@ class MentionsKinder
     $mention = @_current.triggerOptions.formatter(data)
     serializedMention = @_current.triggerOptions.serializer(data)
     $mention.attr('serialized-mention', serializedMention)
+
     # convert temp mention to mention
+    node = document.createTextNode(String.fromCharCode(160)) # &nbsp;
+    $(node).insertAfter(@_current.$tempMention)
+    @_setCaretToEndOf(node)
+
     @_current.$tempMention.replaceWith($mention)
-    # set caret
-    @_setCaretPosition(@$editable[0], 1, $mention[0].nextSibling)
 
     @_current = null
 
   handleAutocompleteFail: =>
     console?.log "Autocomplete fail"
 
-    # store original caret position
-    placeCaret = if @_isCaretInTempMention() then @_getCaretPosition(@_current.$tempMention[0])
     # convert to text
     textNode = document.createTextNode(@_current.$tempMention.text())
     @_current.$tempMention.replaceWith(textNode)
     # set caret to original position
-    if placeCaret
-      @_setCaretPosition(@$editable[0], placeCaret, textNode)
-    else
-      @_setCaretPosition(@$editable[0], textNode.length, textNode)
+    @_setCaretToEndOf(textNode)
 
     @_current = null
 
@@ -134,11 +139,14 @@ class MentionsKinder
   serializeEditable: ->
     @serializeNode(@$editable[0]).join('')
 
+  # TODO turn <br> into \n
   serializeNode: (parentNode)->
     textNodes = []
     for node in parentNode.childNodes
       if node.nodeType == 3 # nodeType 3 is a text node
-        textNodes.push node.data
+        textNodes.push node.data #">#{node.data}<"
+      else if node.nodeName == 'BR'
+        textNodes.push "\n"
       else if serializedMention = $(node).attr('serialized-mention')
         textNodes.push serializedMention
       else
@@ -160,9 +168,10 @@ class MentionsKinder
 
   # clean a single node
   # recurses into child nodes
+  # TODO keep <br>'s
   cleanNode: (node)->
     # dont clean text nodes or mention nodes
-    unless node.nodeType == 3 || $(node).attr('serialized-mention')
+    unless node.nodeType == 3 || node.nodeName == 'BR' || $(node).attr('serialized-mention')
       # clean all children and replace node with them
       if node.childNodes?.length > 0
         @cleanChildNodes(node)
@@ -193,7 +202,7 @@ class MentionsKinder
 
   _setupElements: ->
     @$wrap = $('<div class="mentions-kinder-wrap"></div>')
-    @$editable = $('<pre class="mentions-kinder-input form-control" contenteditable="true"></pre>')
+    @$editable = $('<div class="mentions-kinder-input form-control" contenteditable="true"></div>')
     @$input = $("<input type='hidden' name='#{@$originalInput.attr('name')}'/>")
     @$input.val(@$originalInput.val())
     @$editable.addClass(@$originalInput.attr("class")).html(@deserializeInput())
@@ -208,35 +217,17 @@ class MentionsKinder
     @$editable.bind 'keyup', @handleKeyup
     @$editable.bind 'paste', @handlePaste
 
-  _focusTempMention: ->
-    if @isAutocompleting()
-      element = @_current.$tempMention[0]
-      node = element.firstChild
-      offset = @_current.trigger.length
-      # ie8
-      if document.selection
-        element.focus()
-        node.nodeValue = node.nodeValue + ' '
-        range = document.body.createTextRange()
-        range.moveToElementText(element)
-        range.moveStart('character', offset)
-        range.select()
-      else
-        @_setCaretPosition(element, offset, node)
-
-  _setCaretPosition: (element, position, node)->
-    node ||= element.firstChild
-    window.getSelection?().collapse(node, position)
-
-  _getCaretPosition: ->
-    window.getSelection?().baseOffset
+  _setCaretToEndOf: (node)->
+    selection = rangy.getSelection()
+    range = selection.getRangeAt(0)
+    range.selectNodeContents(node)
+    selection.setSingleRange(range)
+    selection.collapseToEnd()
 
   _isCaretInTempMention: ->
     if @isAutocompleting()
-      if document.selection # ie8
-        true
-      else
-        window.getSelection().baseNode?.parentElement == @_current.$tempMention[0]
+      range = rangy.getSelection().getRangeAt(0)
+      range?.compareNode(@_current.$tempMention.get(0)) == range.NODE_BEFORE_AND_AFTER
 
 
 MentionsKinder.Autocompleter = Autocompleter
