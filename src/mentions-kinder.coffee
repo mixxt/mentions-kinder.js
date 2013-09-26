@@ -27,8 +27,6 @@ class MentionsKinder
     @_setupElements()
     @_setupEvents()
 
-    window.foo = @
-
   handleInput: (e)=>
     charCode = e.charCode || e.which || e.keyCode
     char = String.fromCharCode(charCode)
