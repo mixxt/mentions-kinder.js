@@ -6,9 +6,13 @@ body {
 .mentions-kinder-wrap {
     width: 620px;
 }
-.mentions-kinder-input {
+
+.mentions-kinder-multiline {
     width: 300px;
     min-height: 74px;
+}
+.mentions-kinder-singleline {
+    width: 300px;
 }
 
 textarea.debug-area {
