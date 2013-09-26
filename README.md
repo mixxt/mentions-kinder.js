@@ -6,17 +6,16 @@ mentions-kinder.js
 ## Goals
 - multiple trigger chars (tags, mentions, etc.)
 - configurable output syntax
-- structured code
 - unit tests
-- nice ux
-- jquery only dependency
-- bower
-- requirejs
+- support different autocompleters
 - IE8 Support
 
 ## TODO
 - explain name
+- support input[type=text] aka single line input
+- try to remove rangy dependency, extract what we really need
+- make jquery optional
 
 ## Credits
 Massively inspired by https://github.com/podio/jquery-mentions-input
-We maintained a version internally for a few months which consisted various patches from forks and decided to try a major refactoring.
+We maintained a version internally for a few months which consisted various patches from forks and decided to try a rewrite.
