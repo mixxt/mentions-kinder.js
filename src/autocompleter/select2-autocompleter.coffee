@@ -10,7 +10,8 @@ Autocompleter.Select2Autocompleter = Autocompleter.extend {
     @_setupInput()
 
     @$input.on 'select2-selecting', (e)=>
-      @complete.call(@, name: e.object.text, value: e.object.id)
+      data = $.extend({}, { name: e.object.text, value: e.object.id }, e.object)
+      @complete.call(@, data)
       @$input.select2('destroy').remove()
 
     @$input.on 'select2-close', (e)=>
