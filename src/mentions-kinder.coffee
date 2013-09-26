@@ -15,7 +15,7 @@ class MentionsKinder
     formatter: (data)->
       $trigger = $("<span class='#{data.triggerOptions.triggerName}-trigger'></span>").text(data.trigger)
       $value = $("<span class='#{data.triggerOptions.triggerName}-value'></span>").text(data.name)
-      $('<span class="mention btn-primary active" disabled contenteditable="false"></span>').append($trigger).append($value)
+      $('<span class="mention label" contenteditable="false"></span>').append($trigger).append($value)
     serializer: (data)->
       "[#{data.trigger}#{data.name}](#{data.triggerOptions.triggerName}:#{data.value})"
 
@@ -47,7 +47,6 @@ class MentionsKinder
 
     # abort if the cursor left the temp mention
     if @isAutocompleting() && !@_isCaretInTempMention()
-      console.log "caret left temp mention, aborting"
       @abortAutocomplete()
 
     # set plaintext to our hidden field
@@ -66,7 +65,7 @@ class MentionsKinder
     @_current = {
       trigger: triggerChar,
       triggerOptions: @trigger[triggerChar],
-      $tempMention: $("<span class='mention temp-mention label btn-info active'>#{triggerChar}</span>")
+      $tempMention: $("<span class='mention temp-mention label'>#{triggerChar}</span>")
     }
 
     tempMention = @_current.$tempMention.get(0)
@@ -139,7 +138,6 @@ class MentionsKinder
   serializeEditable: ->
     @serializeNode(@$editable[0]).join('')
 
-  # TODO turn <br> into \n
   serializeNode: (parentNode)->
     textNodes = []
     for node in parentNode.childNodes
