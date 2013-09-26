@@ -64,6 +64,20 @@ module.exports = function(grunt) {
                 ],
                 dest: 'dist/<%= pkg.name %>.js',
                 nonull: true
+            },
+            dist_rangy: {
+                src: [
+                    'tmp/src/autocompleter.js',
+                    'tmp/src/mentions-kinder.js',
+                    'tmp/src/jquery-plugin.js',
+                    'src/extend-patch.js',
+                    'tmp/src/autocompleter/dummy-autocompleter.js',
+                    'tmp/src/autocompleter/select2-autocompleter.js',
+                    'libs/rangy-1.2.3/uncompressed/rangy-core.js'
+//                    'tmp/src/autocompleter/typeahead-autocompleter.js'
+                ],
+                dest: 'dist/<%= pkg.name %>.rangy.js',
+                nonull: true
             }
         },
         uglify: {
@@ -73,6 +87,10 @@ module.exports = function(grunt) {
             dist: {
                 src: '<%= concat.dist.dest %>',
                 dest: 'dist/<%= pkg.name %>.min.js'
+            },
+            dist_rangy: {
+                src: '<%= concat.dist_rangy.dest %>',
+                dest: 'dist/<%= pkg.name %>.rangy.min.js'
             }
         },
         qunit: {
@@ -117,7 +135,12 @@ module.exports = function(grunt) {
 
     // Default task.
     grunt.registerTask('precompile', ['coffee:dev', 'coffee:test', 'concat:dev']);
-    grunt.registerTask('dist', ['coffee:dev', 'coffee:test', 'concat:dist', 'uglify:dist', 'doc:dist']);
+    grunt.registerTask('dist', [
+        'coffee:dev', 'coffee:test',
+        'concat:dist', 'concat:dist_rangy',
+        'uglify:dist', 'uglify:dist_rangy',
+        'doc:dist'
+    ]);
     grunt.registerTask('test', ['precompile', 'qunit']);
     grunt.registerTask('server', ['precompile', 'connect:server', 'watch']);
     grunt.registerTask('default', 'test');
