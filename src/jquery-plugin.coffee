@@ -14,4 +14,5 @@ $.MentionsKinder = MentionsKinder
 $.MentionsKinder.defaultOptions = MentionsKinder::defaultOptions
 $.MentionsKinder.triggerDefaultOptions = MentionsKinder::triggerDefaultOptions
 
-$(rangy.init)
+$ ->
+  rangy.init()
