@@ -2,7 +2,7 @@
   Base class
 ###
 class MentionsKinder
-  KEY = { BACKSPACE: 8, TAB: 9, RETURN: 13, ESC: 27, LEFT: 37, UP: 38, RIGHT: 39, DOWN: 40, COMMA: 188, SPACE: 32, HOME: 36, END: 35 }
+  KEY = { RETURN: 13, ESC: 27 }
   # default options, exposed under $.mentionsKinder.defaultOptions
   defaultOptions:
     trigger:
@@ -33,6 +33,10 @@ class MentionsKinder
     if !@isAutocompleting() && @trigger[char]
       e.preventDefault()
       @startAutocomplete(char)
+
+    # don't allow newline in singleline input
+    if charCode == KEY.RETURN && !@multiline
+      e.preventDefault()
 
   handleKeyup: (e)=>
     if @isAutocompleting()
@@ -167,8 +171,10 @@ class MentionsKinder
   # TODO keep <br>'s
   cleanNode: (node)->
     # dont clean text nodes or mention nodes
-    if node.nodeType == 3 || node.nodeName == 'BR'
+    if node.nodeType == 3
       # do nothing
+    else if node.nodeName == 'BR'
+      $(node).replaceWith(' ') unless @multiline # clean breaks in single line inputs
     else if $(node).attr('serialized-mention')
       $(node).attr('contenteditable', false) # ensure contenteditable is set after paste
     else
@@ -191,6 +197,8 @@ class MentionsKinder
     unless @$originalInput.is('input[type=text],textarea')
       $.error("$.mentionsKinder works only on input[type=text] or textareas, was #{element && element.tagName}")
 
+    @multiline = @$originalInput.is('textarea')
+
   _buildOptions: (options)->
     # build options
     @options = $.extend {}, @defaultOptions, options
@@ -200,9 +208,14 @@ class MentionsKinder
 
     @trigger = @options.trigger || {}
 
+  # Converts the given input/textarea to an editable that hopefully looks the same
+  # called from constructor
+  # assigns @$wrap, @$editable and @$input
+  # requires @$originalInput
   _setupElements: ->
     @$wrap = $('<div class="mentions-kinder-wrap"></div>')
-    @$editable = $('<div class="mentions-kinder-input form-control" contenteditable="true"></div>')
+    @$editable = $('<div class="form-control" contenteditable="true"></div>')
+    @$editable.addClass("mentions-kinder-#{if @multiline then 'multiline' else 'singleline'}")
     @$input = $("<input type='hidden' name='#{@$originalInput.attr('name')}'/>")
     @$input.val(@$originalInput.val())
     @$editable.addClass(@$originalInput.attr("class")).html(@deserializeInput())
@@ -211,6 +224,8 @@ class MentionsKinder
     @$originalInput.hide().appendTo(@$wrap)
     @$input.appendTo(@$wrap)
     @$editable.appendTo(@$wrap)
+
+    undefined
 
   _setupEvents: ->
     @$editable.bind 'keypress', @handleInput
