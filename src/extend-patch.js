@@ -1,6 +1,6 @@
 
 function has(object, property) {
-    return object ? hasOwnProperty.call(object, property) : false;
+    return object ? Object.prototype.hasOwnProperty.call(object, property) : false;
 }
 
 var extend = function(protoProps, staticProps) {
