@@ -4,8 +4,13 @@
     font-family: "Helvetica Neue",Helvetica,Arial,sans-serif;
 }
 
-.label.mention {
+.mention {
     font-size: 90%;
     font-weight: normal;
     padding: .125em .35em;
+    background-color: #3c510c;
+}
+
+.temp-mention {
+    background-color: #000080;
 }
