@@ -169,7 +169,11 @@ class MentionsKinder
   # TODO keep <br>'s
   cleanNode: (node)->
     # dont clean text nodes or mention nodes
-    unless node.nodeType == 3 || node.nodeName == 'BR' || $(node).attr('serialized-mention')
+    if node.nodeType == 3 || node.nodeName == 'BR'
+      # do nothing
+    else if $(node).attr('serialized-mention')
+      $(node).attr('contenteditable', false) # ensure contenteditable is set after paste
+    else
       # clean all children and replace node with them
       if node.childNodes?.length > 0
         @cleanChildNodes(node)
