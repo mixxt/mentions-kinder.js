@@ -105,7 +105,7 @@ module.exports = function(grunt) {
     grunt.registerTask('doc:dist', function(){
         if(grunt.file.exists('doc')){
             var source = grunt.config.get('uglify.dist.dest'),
-                destination = "doc/js/"+source;
+                destination = "doc/"+source;
             grunt.file.copy(source, destination)
         }
         else {
