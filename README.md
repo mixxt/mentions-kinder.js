@@ -12,6 +12,7 @@ mentions-kinder.js
 
 ## TODO
 - explain name
+- context sensitive trigger, i.e. don't trigger @-mention when entering email address, via regex (`/(^|\s)@/`), which would support multi-char triggers too
 - support input[type=text] aka single line input
 - try to remove rangy dependency, extract what we really need
 - make jquery optional
