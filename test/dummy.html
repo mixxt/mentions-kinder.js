@@ -12,7 +12,7 @@
     <script src="../libs/jquery-loader.js"></script>
     <script src="../libs/rangy-1.2.3/uncompressed/rangy-core.js"></script>
     <script src="../doc/js/debug.js"></script>
-    <!--<script src="//cdnjs.cloudflare.com/ajax/libs/select2/3.4.1/select2.min.js"></script>-->
+    <script src="//cdnjs.cloudflare.com/ajax/libs/select2/3.4.1/select2.min.js"></script>
     <!-- Load local lib and tests. -->
     <script src="../tmp/mentions-kinder.js"></script>
 
@@ -32,34 +32,34 @@
 <script>
 $(function(){
     // configure autocompleter
-//    var simpsonAutocompleter = $.MentionsKinder.Autocompleter.Select2Autocompleter.extend({
-//        select2Options: {
-//            data: [
-//                {id:'homer',text:'Homer Jay Simpson'},
-//                {id:'marge',text:'Marjorie Simpson'},
-//                {id:'bart',text:'Bartholomew JoJo Simpson'},
-//                {id:'lisa',text:'Lisa Marie Simpson'},
-//                {id:'maggie',text:'Margaret Simpson'}
-//            ]
-//        }
-//    });
-//
-//    var tagAutocompleter = $.MentionsKinder.Autocompleter.Select2Autocompleter.extend({
-//        select2Options: {
-//            tags: ["red", "green", "blue"]
-//        }
-//    });
-//
-//    // if no options are provided, use @ with simpsonsAutocompleter only
-//    $.MentionsKinder.defaultOptions.trigger['@'].autocompleter = simpsonAutocompleter;
-    $.MentionsKinder.triggerDefaultOptions.autocompleter = $.MentionsKinder.Autocompleter.DummyAutocompleter;
+    var simpsonAutocompleter = $.MentionsKinder.Autocompleter.Select2Autocompleter.extend({
+        select2Options: {
+            data: [
+                {id:'homer',text:'Homer Jay Simpson'},
+                {id:'marge',text:'Marjorie Simpson'},
+                {id:'bart',text:'Bartholomew JoJo Simpson'},
+                {id:'lisa',text:'Lisa Marie Simpson'},
+                {id:'maggie',text:'Margaret Simpson'}
+            ]
+        }
+    });
+
+    var tagAutocompleter = $.MentionsKinder.Autocompleter.Select2Autocompleter.extend({
+        select2Options: {
+            tags: ["red", "green", "blue"]
+        }
+    });
+
+    // if no options are provided, use @ with simpsonsAutocompleter only
+    $.MentionsKinder.defaultOptions.trigger['@'].autocompleter = simpsonAutocompleter;
+//    $.MentionsKinder.triggerDefaultOptions.autocompleter = $.MentionsKinder.Autocompleter.DummyAutocompleter;
 
     simple = $('.simple').mentionsKinder().enableMyDebug().data('mentionsKinder');
     $('.tags').mentionsKinder({
         trigger: {
             '#': {
                 triggerName: 'tag',
-//                autocompleter: tagAutocompleter
+                autocompleter: tagAutocompleter
             }
         }
     }).enableMyDebug();
@@ -67,11 +67,11 @@ $(function(){
         trigger: {
             '#': {
                 triggerName: 'tag',
-//                autocompleter: tagAutocompleter
+                autocompleter: tagAutocompleter
             },
             '@': {
                 triggerName: 'member',
-//                autocompleter: simpsonAutocompleter
+                autocompleter: simpsonAutocompleter
             }
         }
     }).enableMyDebug();
