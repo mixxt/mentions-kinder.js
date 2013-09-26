@@ -2,7 +2,7 @@
   This autocompleter will return your search string and a random value after the timeout,
   simulating a user selecting something from the autocomplete
 ###
-class Autocompleter.DummyAutocompleter extends Autocompleter
+Autocompleter.DummyAutocompleter = Autocompleter.extend
   timeout: 2000
   search: (string)->
     clearTimeout(@timer) if @timer
