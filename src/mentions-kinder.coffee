@@ -132,7 +132,7 @@ class MentionsKinder
 
   handlePlaceholder: (event)=>
     if event.type == 'focus'
-      @$placeholder.detach()
+      @$placeholder?.detach()
     else if event.type == 'blur'
       if @_strip(@serializeEditable()) == ''
         @$editable.empty().append(@$placeholder)
