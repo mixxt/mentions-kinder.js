@@ -67,3 +67,12 @@ do ($ = jQuery) ->
       $hidden = $(@).parents('.mentions-kinder-wrap').find('input[type=hidden]')
       ok $hidden.length > 0
       equal $hidden.attr('name'), 'foo'
+
+  test 'it adds a placeholder span if placeholder attribute is set', ->
+    expect 4
+    @inputs.attr('placeholder', 'My Placeholder')
+
+    @inputs.mentionsKinder().each ->
+      $placeholder = $(@).parents('.mentions-kinder-wrap').find('span.placeholder')
+      ok $placeholder.length > 0
+      equal $placeholder.text(), 'My Placeholder'

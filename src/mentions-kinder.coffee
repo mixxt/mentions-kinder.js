@@ -130,6 +130,13 @@ class MentionsKinder
   handleReset: =>
     @$editable.empty()
 
+  handlePlaceholder: (event)=>
+    if event.type == 'focus'
+      @$placeholder.detach()
+    else if event.type == 'blur'
+      if @_strip(@serializeEditable()) == ''
+        @$editable.empty().append(@$placeholder)
+
   populateInput: =>
     val = @serializeEditable()
     @$originalInput.val(val)
@@ -217,6 +224,8 @@ class MentionsKinder
     @$input = $("<input type='hidden' name='#{@$originalInput.attr('name')}'/>")
     @$input.val(@$originalInput.val())
     @$editable.addClass(@$originalInput.attr("class")).html(@deserializeInput())
+    if placeholder = @$originalInput.attr('placeholder')
+      @$placeholder = $("<span class='placeholder'>#{placeholder}</span>").appendTo(@$editable)
 
     @$wrap.insertAfter(@$originalInput)
     @$originalInput.hide().appendTo(@$wrap)
@@ -229,6 +238,7 @@ class MentionsKinder
     @$editable.bind 'keypress', @handleInput
     @$editable.bind 'keyup', @handleKeyup
     @$editable.bind 'paste', @handlePaste
+    @$editable.bind 'focus blur', @handlePlaceholder
     if form = @$originalInput.get(0).form
       $(form).on('reset', @handleReset)
 
@@ -244,5 +254,7 @@ class MentionsKinder
       range = rangy.getSelection().getRangeAt(0)
       range?.compareNode(@_current.$tempMention.get(0)) == range.NODE_BEFORE_AND_AFTER
 
+  _strip: (text)->
+    text.replace(/^\s*(.*?)\s*$/gm, '$1')
 
 MentionsKinder.Autocompleter = Autocompleter

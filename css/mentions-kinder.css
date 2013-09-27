@@ -15,6 +15,9 @@
 .mentions-kinder-multiline p {
     margin: 0;
 }
+.mentions-kinder-wrap .placeholder {
+  color: #A39999;
+}
 .mentions-kinder-singleline {
     white-space: nowrap;
     overflow: hidden;

@@ -12,7 +12,6 @@ mentions-kinder.js
 
 ## TODO
 - explain name
-- Implement Placeholder
 - add API for change/reset/etc.
 - context sensitive trigger, i.e. don't trigger @-mention when entering email address, via regex (`/(^|\s)@/`), which would support multi-char triggers too
 - try to remove rangy dependency, extract what we really need
