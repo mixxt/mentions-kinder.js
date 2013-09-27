@@ -132,6 +132,9 @@ class MentionsKinder
 
     @_current = null
 
+  handleReset: =>
+    @$editable.empty()
+
   populateInput: =>
     val = @serializeEditable()
     @$originalInput.val(val)
@@ -231,6 +234,8 @@ class MentionsKinder
     @$editable.bind 'keypress', @handleInput
     @$editable.bind 'keyup', @handleKeyup
     @$editable.bind 'paste', @handlePaste
+    if form = @$originalInput.get(0).form
+      $(form).on('reset', @handleReset)
 
   _setCaretToEndOf: (node)->
     selection = rangy.getSelection()

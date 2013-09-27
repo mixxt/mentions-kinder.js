@@ -18,7 +18,7 @@
 
 </head>
 <body>
-<div style="margin: 20px;">
+<form style="margin: 20px;">
     <h4>Basic</h4>
     <textarea class="simple" name="text1"></textarea>
     <p>Try mentioning someone with @ prefix</p>
@@ -31,7 +31,11 @@
 
     <h4>Single line mode</h4>
     <input type="text" class="multiple" />
-</div>
+
+    <div class="form-actions" style="clear: both">
+        <input class="btn btn-default" type="reset" />
+    </div>
+</form>
 <script>
 $(function(){
     // configure autocompleter
