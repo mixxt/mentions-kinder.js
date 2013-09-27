@@ -12,6 +12,9 @@
 .mentions-kinder-multiline {
     height: auto;
 }
+.mentions-kinder-multiline p {
+    margin: 0;
+}
 .mentions-kinder-singleline {
     white-space: nowrap;
     overflow: hidden;
