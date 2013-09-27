@@ -1,0 +1,22 @@
+.mention {
+    font-size: 90%;
+    font-weight: normal;
+    padding: .125em .35em;
+    background-color: #3c510c;
+}
+
+.temp-mention {
+    background-color: #000080;
+}
+
+.mentions-kinder-multiline {
+    height: auto;
+}
+.mentions-kinder-singleline {
+    white-space: nowrap;
+    overflow: hidden;
+}
+.mentions-kinder-singleline * {
+    display:inline;
+    white-space:nowrap;
+}
