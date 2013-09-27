@@ -133,7 +133,7 @@ class MentionsKinder
   handlePlaceholder: (event)=>
     if event.type == 'focus'
       @$placeholder?.detach()
-    else if event.type == 'blur'
+    else if event.type == 'blur' || event.type == 'reset'
       if @_strip(@serializeEditable()) == ''
         @$editable.empty().append(@$placeholder)
 
@@ -241,6 +241,7 @@ class MentionsKinder
     @$editable.bind 'focus blur', @handlePlaceholder
     if form = @$originalInput.get(0).form
       $(form).on('reset', @handleReset)
+      $(form).on('reset', @handlePlaceholder)
 
   _setCaretToEndOf: (node)->
     selection = rangy.getSelection()
