@@ -122,9 +122,12 @@ module.exports = function(grunt) {
 
     grunt.registerTask('doc:dist', function(){
         if(grunt.file.exists('doc')){
-            var source = grunt.config.get('uglify.dist.dest'),
-                destination = "doc/"+source;
-            grunt.file.copy(source, destination)
+            var source_js = grunt.config.get('uglify.dist.dest'),
+                destination_js = "doc/"+source_js,
+                source_css = 'dist/mentions-kinder.css',
+                destination_css = "doc/"+source_css;
+            grunt.file.copy(source_js, destination_js);
+            grunt.file.copy(source_css, destination_css);
         }
         else {
             var repo = "git@github.com:mixxt/mentions-kinder.js.git",
@@ -133,12 +136,19 @@ module.exports = function(grunt) {
         }
     });
 
+    grunt.registerTask('css:dist', function(){
+        var source_css = 'css/mentions-kinder.css',
+            dist_css = "dist/mentions-kinder.css";
+        grunt.file.copy(source_css, dist_css);
+    });
+
     // Default task.
     grunt.registerTask('precompile', ['coffee:dev', 'coffee:test', 'concat:dev']);
     grunt.registerTask('dist', [
         'coffee:dev', 'coffee:test',
         'concat:dist', 'concat:dist_rangy',
         'uglify:dist', 'uglify:dist_rangy',
+        'css:dist',
         'doc:dist'
     ]);
     grunt.registerTask('test', ['precompile', 'qunit']);
