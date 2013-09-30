@@ -147,10 +147,10 @@ class MentionsKinder
   handleReset: =>
     @$editable.empty()
 
-  handlePlaceholder: (event)=>
-    if event.type == 'focus'
+  handlePlaceholder: (e)=>
+    if e.type == 'focus'
       @$placeholder?.detach()
-    else if event.type == 'blur' || event.type == 'reset'
+    else if e.type == 'blur' || e.type == 'reset'
       if @_strip(@serializeEditable()) == ''
         @$editable.empty().append(@$placeholder)
 
