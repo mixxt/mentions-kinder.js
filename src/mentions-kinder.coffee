@@ -116,7 +116,16 @@ class MentionsKinder
       @abortAutocomplete()
 
   isAutocompleting: ->
-    @_current?
+    if @_current?
+      if $.contains(@$editable, @_current.$tempMention)
+        true
+      else
+        @_current.autocompleter.abort()
+        @_current = null
+        false
+    else
+      false
+
 
   abortAutocomplete: ->
     @isAutocompleting() && @_current.autocompleter.abort()
