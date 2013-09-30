@@ -1,9 +1,10 @@
 .mention {
-    font-size: 90%;
-    font-weight: normal;
-    padding: .125em .35em;
-    background-color: #3c510c;
+  font-size: 90%;
+  font-weight: normal;
+  padding: .125em .35em;
+  background-color: #3c510c;
 }
+
 .mention .delete-mention {
   font-family: monospace;
   color: #A1A1A1;
@@ -18,23 +19,28 @@
 }
 
 .temp-mention {
-    background-color: #000080;
+  background-color: #000080;
 }
 
 .mentions-kinder-multiline {
-    height: auto;
+  height: auto;
+  word-wrap: break-word;
 }
+
 .mentions-kinder-multiline p {
-    margin: 0;
+  margin: 0;
 }
+
 .mentions-kinder-wrap .placeholder {
   color: #A39999;
 }
+
 .mentions-kinder-singleline {
-    white-space: nowrap;
-    overflow: hidden;
+  white-space: nowrap;
+  overflow: hidden;
 }
+
 .mentions-kinder-singleline * {
-    display:inline;
-    white-space:nowrap;
+  display: inline;
+  white-space: nowrap;
 }
