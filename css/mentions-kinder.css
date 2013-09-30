@@ -4,6 +4,12 @@
     padding: .125em .35em;
     background-color: #3c510c;
 }
+.mention .delete-mention {
+  font-family: monospace;
+  color: #A1A1A1;
+  margin-left: 5px;
+  cursor: pointer;
+}
 
 .temp-mention {
     background-color: #000080;

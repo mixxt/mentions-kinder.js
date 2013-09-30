@@ -31,7 +31,8 @@ class MentionsKinder
       $trigger = $("<span class='#{data.triggerOptions.triggerName}-trigger'></span>").text(data.trigger)
       $value = $("<span class='#{data.triggerOptions.triggerName}-value'></span>").text(data.name)
       $mention = $('<span class="mention label" contenteditable="false"></span>')
-      $mention.append([$trigger, $value])
+      $deleteHandle = $("<span class='delete-mention #{data.triggerOptions.triggerName}-delete'>x</span>")
+      $mention.append([$trigger, $value, $deleteHandle])
       $mention.attr('serialized-mention', data.serializedMention)
       $mention
     serializer: (data)->
@@ -153,6 +154,10 @@ class MentionsKinder
     else if e.type == 'blur' || e.type == 'reset'
       if @_strip(@serializeEditable()) == ''
         @$editable.empty().append(@$placeholder)
+
+  handleDelete: (e)=>
+    $currentMentionNode = $(e.target).parents('.mention')
+    $currentMentionNode.remove() if $currentMentionNode
 
   populateInput: =>
     val = @serializeEditable()
@@ -284,8 +289,10 @@ class MentionsKinder
     @$editable.bind 'keyup', @handleKeyup
     @$editable.bind 'paste', @handlePaste
     @$editable.bind 'focus blur', @handlePlaceholder
-
+    @$editable.on 'click', '.delete-mention', @handleDelete
+    
     @$originalInput.bind 'change', @deserializeFromInput
+    
     if form = @$originalInput.get(0).form
       $(form).on('reset', @handleReset)
       $(form).on('reset', @handlePlaceholder)
