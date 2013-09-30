@@ -159,6 +159,7 @@ class MentionsKinder
 
   handleReset: =>
     @$editable.empty()
+    @$input.val(@$originalInput.val())
 
   handlePlaceholder: (e)=>
     if e.type == 'focus'
@@ -177,7 +178,6 @@ class MentionsKinder
 
   populateInput: =>
     val = @serializeEditable()
-    @$originalInput.val(val)
     @$input?.val(val)
 
   serializeEditable: ->
