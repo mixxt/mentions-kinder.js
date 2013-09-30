@@ -132,6 +132,7 @@ class MentionsKinder
     # convert temp mention to mention
     node = document.createTextNode(String.fromCharCode(160)) # &nbsp;
     $(node).insertAfter(@_current.$tempMention)
+    @$editable.focus() # refocus editable, required for firefox
     @_setCaretToEndOf(node)
 
     @_current.$tempMention.replaceWith($mention)
