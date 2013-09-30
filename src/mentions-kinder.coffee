@@ -210,8 +210,8 @@ class MentionsKinder
 
     true
 
-  deserializeInput: ->
-    @_deserialize(@$originalInput.val())
+  deserializeFromInput: =>
+    @$editable.html @_deserialize(@$originalInput.val())
 
   _deserialize: (text)->
     result = []
@@ -268,7 +268,7 @@ class MentionsKinder
     @$input = $("<input type='hidden' name='#{@$originalInput.attr('name')}'/>")
     @$input.val(@$originalInput.val())
     @$editable.addClass(@$originalInput.attr("class"))
-    @$editable.html(@deserializeInput()) unless @$originalInput.val() == ''
+    @deserializeFromInput() unless @$originalInput.val() == ''
     if placeholder = @$originalInput.attr('placeholder')
       @$placeholder = $("<span class='placeholder'>#{placeholder}</span>").appendTo(@$editable)
 
@@ -284,6 +284,8 @@ class MentionsKinder
     @$editable.bind 'keyup', @handleKeyup
     @$editable.bind 'paste', @handlePaste
     @$editable.bind 'focus blur', @handlePlaceholder
+
+    @$originalInput.bind 'change', @deserializeFromInput
     if form = @$originalInput.get(0).form
       $(form).on('reset', @handleReset)
       $(form).on('reset', @handlePlaceholder)
