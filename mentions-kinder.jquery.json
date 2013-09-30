@@ -2,7 +2,7 @@
   "name": "mentions-kinder",
   "title": "mentions-kinder",
   "description": "simple and customizable inline mentions/token-plugin for jQuery",
-  "version": "0.1.0-beta1",
+  "version": "0.1.0-beta2",
   "homepage": "https://mixxt.github.io/mentions-kinder.js",
   "author": {
     "name": "Christoph Geschwind",
