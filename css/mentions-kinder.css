@@ -11,6 +11,12 @@
   cursor: pointer;
 }
 
+.icon-remove:before {
+  content: 'x';
+  display: inline-block;
+  speak: none;
+}
+
 .temp-mention {
     background-color: #000080;
 }

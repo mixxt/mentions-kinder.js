@@ -31,7 +31,7 @@ class MentionsKinder
       $trigger = $("<span class='#{data.triggerOptions.triggerName}-trigger'></span>").text(data.trigger)
       $value = $("<span class='#{data.triggerOptions.triggerName}-value'></span>").text(data.name)
       $mention = $('<span class="mention label" contenteditable="false"></span>')
-      $deleteHandle = $("<span class='delete-mention #{data.triggerOptions.triggerName}-delete'>x</span>")
+      $deleteHandle = $("<span class='delete-mention #{data.triggerOptions.triggerName}-delete'><i class='icon-remove'></i></span>")
       $mention.append([$trigger, $value, $deleteHandle])
       $mention.attr('serialized-mention', data.serializedMention)
       $mention
