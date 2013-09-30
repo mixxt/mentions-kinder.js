@@ -55,6 +55,8 @@ class MentionsKinder
     # don't allow newline in singleline input
     if charCode == KEY.RETURN && !@multiline
       e.preventDefault()
+      if @submitOnEnter
+        @$form.submit()
 
   handleKeyup: (e)=>
     if @isAutocompleting()
@@ -280,15 +282,19 @@ class MentionsKinder
     undefined
 
   _setupEvents: ->
+    # editable events
     @$editable.bind 'keypress', @handleInput
     @$editable.bind 'keyup', @handleKeyup
     @$editable.bind 'paste', @handlePaste
     @$editable.bind 'focus blur', @handlePlaceholder
-
+    # input events
     @$originalInput.bind 'change', @deserializeFromInput
+    # form related events
     if form = @$originalInput.get(0).form
-      $(form).on('reset', @handleReset)
-      $(form).on('reset', @handlePlaceholder)
+      @$form = $(form)
+      @submitOnEnter = true if !@multiline
+      @$form.on('reset', @handleReset)
+      @$form.on('reset', @handlePlaceholder)
 
   _setCaretToEndOf: (node)->
     selection = rangy.getSelection()
