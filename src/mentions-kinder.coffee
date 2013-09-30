@@ -156,8 +156,12 @@ class MentionsKinder
         @$editable.empty().append(@$placeholder)
 
   handleDelete: (e)=>
+    e.preventDefault()
     $currentMentionNode = $(e.target).parents('.mention')
-    $currentMentionNode.remove() if $currentMentionNode
+    if $currentMentionNode
+      nextNode = $currentMentionNode.get(0).nextSibling
+      @_setCaretToStartOf(nextNode) if nextNode
+      $currentMentionNode.remove()
 
   populateInput: =>
     val = @serializeEditable()
@@ -297,12 +301,18 @@ class MentionsKinder
       $(form).on('reset', @handleReset)
       $(form).on('reset', @handlePlaceholder)
 
-  _setCaretToEndOf: (node)->
+  _prepareSetCaretTo: (node)->
     selection = rangy.getSelection()
     range = selection.getRangeAt(0)
     range.selectNodeContents(node)
     selection.setSingleRange(range)
-    selection.collapseToEnd()
+    selection
+
+  _setCaretToEndOf: (node)->
+    @_prepareSetCaretTo(node).collapseToEnd()
+
+  _setCaretToStartOf: (node)->
+    @_prepareSetCaretTo(node).collapseToStart()
 
   _isCaretInTempMention: ->
     if @isAutocompleting()
