@@ -267,7 +267,8 @@ class MentionsKinder
     @$wrap = $('<div class="mentions-kinder-wrap"></div>')
     @$editable = $('<div class="form-control" contenteditable="true"></div>')
     @$editable.addClass("mentions-kinder-#{if @multiline then 'multiline' else 'singleline'}")
-    @$input = $("<input type='hidden' name='#{@$originalInput.attr('name')}'/>")
+    @$input = $("<input type='hidden'/>")
+    @$input.attr('name', @$originalInput.attr('name'))
     @$input.val(@$originalInput.val())
     @$editable.addClass(@$originalInput.attr("class"))
     @deserializeFromInput() unless @$originalInput.val() == ''
