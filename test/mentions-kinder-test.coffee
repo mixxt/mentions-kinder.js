@@ -76,3 +76,39 @@ do ($ = jQuery) ->
       $placeholder = $(@).parents('.mentions-kinder-wrap').find('span.placeholder')
       ok $placeholder.length > 0
       equal $placeholder.text(), 'My Placeholder'
+
+  module 'deserialization',
+    setup: ->
+      @obj = new MentionsKinder(document.createElement('textarea'))
+
+  textNodeEqual = (node, text)->
+    equal node.nodeName, '#text', "node is text node"
+    equal node.data, text, "node has correct text"
+
+  test 'it returns array', ->
+    result1 = @obj._deserialize('')
+    ok result1 instanceof Array, 'returns array'
+    equal result1.length, 0, 'returns empty array for empty input'
+
+    result2 = @obj._deserialize('blubb')
+    ok result2 instanceof Array, 'returns array'
+    equal result2.length, 1, 'returns 1 element for text only input'
+    textNodeEqual result2[0], 'blubb'
+
+  test 'it deserializes token', ->
+    result = @obj._deserialize('[@foo](member:123)')
+    equal result.length, 1, "returns one elements hmm"
+    $mention =  $(result[0])
+    ok $mention.is('span.mention'), 'second element is a mention'
+    equal $mention.text(), '@foo', 'has right text'
+    equal $mention.attr('serialized-mention'), '[@foo](member:123)', 'has serialized-mention attribute'
+
+  test 'it deserializes mixed text', ->
+    result = @obj._deserialize('foo [@derp](member:1337) bar')
+    equal result.length, 3, "returns three elements"
+    textNodeEqual result[0], 'foo '
+    textNodeEqual result[2], ' bar'
+    $mention =  $(result[1])
+    ok $mention.is('span.mention'), 'second element is a mention'
+    equal $mention.text(), '@derp', 'has right text'
+    equal $mention.attr('serialized-mention'), '[@derp](member:1337)', 'has serialized-mention attribute'

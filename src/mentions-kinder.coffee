@@ -9,13 +9,31 @@ class MentionsKinder
       '@': {
         triggerName: 'member'
       } # inherit default
+    deserialize: (matchedToken, trigger, name, triggerName, value)->
+      formatter = @options.trigger[trigger]?.formatter
+      if formatter
+        formatter(
+          trigger: trigger,
+          name: name,
+          value: value,
+          triggerOptions: {triggerName: triggerName},
+          serializedMention: matchedToken
+        ).get(0)
+      else
+        document.createTextNode(matchedToken)
+
+    deserializeRegex: /\[(.)(.+?)\]\((\w+):(.+?)\)/g
+
 
   triggerDefaultOptions:
     autocompleter: Autocompleter
     formatter: (data)->
       $trigger = $("<span class='#{data.triggerOptions.triggerName}-trigger'></span>").text(data.trigger)
       $value = $("<span class='#{data.triggerOptions.triggerName}-value'></span>").text(data.name)
-      $('<span class="mention label" contenteditable="false"></span>').append($trigger).append($value)
+      $mention = $('<span class="mention label" contenteditable="false"></span>')
+      $mention.append([$trigger, $value])
+      $mention.attr('serialized-mention', data.serializedMention)
+      $mention
     serializer: (data)->
       "[#{data.trigger}#{data.name}](#{data.triggerOptions.triggerName}:#{data.value})"
 
@@ -105,9 +123,8 @@ class MentionsKinder
     data = $.extend({}, @_current, data)
 
     # create mention
+    data.serializedMention = @_current.triggerOptions.serializer(data)
     $mention = @_current.triggerOptions.formatter(data)
-    serializedMention = @_current.triggerOptions.serializer(data)
-    $mention.attr('serialized-mention', serializedMention)
 
     # convert temp mention to mention
     node = document.createTextNode(String.fromCharCode(160)) # &nbsp;
@@ -194,8 +211,35 @@ class MentionsKinder
     true
 
   deserializeInput: ->
-    # TODO implement
-    document.createTextNode(@$originalInput.val())
+    @_deserialize(@$originalInput.val())
+
+  _deserialize: (text)->
+    result = []
+    regex = @options.deserializeRegex
+    #console.log "START", text
+    pointer = 0
+
+    loop
+      match = regex.exec(text)
+      if match
+        # add text before matched token
+        unless match.index == 0
+          #console.log "LOOP substring from #{pointer} to #{match.index}", text.substring(pointer, match.index)
+          result.push document.createTextNode(text.substring(pointer, match.index))
+        pointer = regex.lastIndex
+        # deserialize matched token
+        #console.log "LOOP deserialize", match[0]
+        result.push @options.deserialize.apply(@, match)
+      else
+        unless pointer == text.length
+          #console.log "LAST substring from #{pointer} to #{text.length}", text.substring(pointer, text.length)
+          lastText = text.substring(pointer, text.length)
+          result.push document.createTextNode(lastText)  unless lastText == ''
+        break
+
+    #console.log "RESULT", result, "\n\n"
+
+    result
 
   _ensureInput: (element)->
     @$originalInput = $(element)
@@ -223,7 +267,8 @@ class MentionsKinder
     @$editable.addClass("mentions-kinder-#{if @multiline then 'multiline' else 'singleline'}")
     @$input = $("<input type='hidden' name='#{@$originalInput.attr('name')}'/>")
     @$input.val(@$originalInput.val())
-    @$editable.addClass(@$originalInput.attr("class")).html(@deserializeInput())
+    @$editable.addClass(@$originalInput.attr("class"))
+    @$editable.html(@deserializeInput()) unless @$originalInput.val() == ''
     if placeholder = @$originalInput.attr('placeholder')
       @$placeholder = $("<span class='placeholder'>#{placeholder}</span>").appendTo(@$editable)
 
