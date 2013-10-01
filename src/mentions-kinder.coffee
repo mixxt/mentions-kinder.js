@@ -240,14 +240,6 @@ class MentionsKinder
     #console.log "START", text
     pointer = 0
 
-    # Split text into lines and add br-nodes to keep line breaks
-    _deserializeText = (text)->
-      #console.log "_deserializeText", text
-      lines = text.split("\n")
-      for line, i in lines
-        result.push document.createTextNode(line)
-        result.push document.createElement('br') unless i == lines.length - 1
-
     # deserialize magic
     loop
       match = regex.exec(text)
@@ -255,7 +247,7 @@ class MentionsKinder
         # add text before matched token
         unless match.index == 0
           #console.log "LOOP substring from #{pointer} to #{match.index}", text.substring(pointer, match.index)
-          _deserializeText(text.substring(pointer, match.index))
+          @_deserializeText.call(result, text.substring(pointer, match.index))
           #result.push document.createTextNode(text.substring(pointer, match.index))
         pointer = regex.lastIndex
         # deserialize matched token
@@ -265,12 +257,21 @@ class MentionsKinder
         unless pointer == text.length
           #console.log "LAST substring from #{pointer} to #{text.length}", text.substring(pointer, text.length)
           lastText = text.substring(pointer, text.length)
-          _deserializeText(lastText) unless lastText == ''
+          @_deserializeText.call(result, lastText) unless lastText == ''
           #result.push document.createTextNode(lastText)  unless lastText == ''
         break
-
+    # return array of nodes
     #console.log "RESULT", result, "\n\n"
     result
+
+  # Split text into lines and add br-nodes to keep line breaks
+  # musst be called with array as context (this), for example see _deserialize a few lines above
+  _deserializeText: (text)->
+    #console.log "_deserializeText", text
+    lines = text.split("\n")
+    for line, i in lines
+      @push document.createTextNode(line)
+      @push document.createElement('br') unless i == lines.length - 1
 
   _ensureInput: (element)->
     @$originalInput = $(element)
