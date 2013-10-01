@@ -186,12 +186,21 @@ class MentionsKinder
   serializeNode: (parentNode)->
     textNodes = []
     for node in parentNode.childNodes
+      # is text node, append text
       if node.nodeType == 3 # nodeType 3 is a text node
-        textNodes.push node.data #">#{node.data}<"
-      else if node.nodeName == 'BR'
+        textNodes.push node.data
+      # is br node, append newline
+      else if node.nodeName.toUpperCase() == 'BR'
         textNodes.push "\n"
+      # is mention, append serializedMention
       else if serializedMention = $(node).attr('serialized-mention')
         textNodes.push serializedMention
+      # is p or div, append newline and serialize children
+      else if node.nodeName.toUpperCase() == 'P' || node.nodeName.toUpperCase() == 'DIV'
+        # add newline only if first child is not a br-node, prevent endless new line duplicating
+        textNodes.push("\n") unless node.childNodes[0]?.nodeName?.toUpperCase() == 'BR'
+        textNodes = textNodes.concat @serializeNode(node)
+      # is any other tag, serialize children
       else
         textNodes = textNodes.concat @serializeNode(node)
     textNodes
