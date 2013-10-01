@@ -240,13 +240,23 @@ class MentionsKinder
     #console.log "START", text
     pointer = 0
 
+    # Split text into lines and add br-nodes to keep line breaks
+    _deserializeText = (text)->
+      #console.log "_deserializeText", text
+      lines = text.split("\n")
+      for line, i in lines
+        result.push document.createTextNode(line)
+        result.push document.createElement('br') unless i == lines.length - 1
+
+    # deserialize magic
     loop
       match = regex.exec(text)
       if match
         # add text before matched token
         unless match.index == 0
           #console.log "LOOP substring from #{pointer} to #{match.index}", text.substring(pointer, match.index)
-          result.push document.createTextNode(text.substring(pointer, match.index))
+          _deserializeText(text.substring(pointer, match.index))
+          #result.push document.createTextNode(text.substring(pointer, match.index))
         pointer = regex.lastIndex
         # deserialize matched token
         #console.log "LOOP deserialize", match[0]
@@ -255,11 +265,11 @@ class MentionsKinder
         unless pointer == text.length
           #console.log "LAST substring from #{pointer} to #{text.length}", text.substring(pointer, text.length)
           lastText = text.substring(pointer, text.length)
-          result.push document.createTextNode(lastText)  unless lastText == ''
+          _deserializeText(lastText) unless lastText == ''
+          #result.push document.createTextNode(lastText)  unless lastText == ''
         break
 
     #console.log "RESULT", result, "\n\n"
-
     result
 
   _ensureInput: (element)->

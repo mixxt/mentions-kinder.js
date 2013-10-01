@@ -112,3 +112,10 @@ do ($ = jQuery) ->
     ok $mention.is('span.mention'), 'second element is a mention'
     equal $mention.text(), '@derp', 'has right text'
     equal $mention.attr('serialized-mention'), '[@derp](member:1337)', 'has serialized-mention attribute'
+
+  test 'it deserializes line breals', ->
+    result = @obj._deserialize("foo\nbar")
+    equal result.length, 3, "returns three elements"
+    textNodeEqual result[0], 'foo'
+    ok result[1].tagName.toLowerCase() == 'br'
+    textNodeEqual result[2], 'bar'
