@@ -160,7 +160,7 @@ class MentionsKinder
     @_current = null
 
   handleReset: =>
-    @$editable.empty()
+    @$editable.empty().blur()
     @$input.val(@$originalInput.val())
 
   handlePlaceholder: (e)=>
