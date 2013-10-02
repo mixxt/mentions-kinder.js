@@ -68,6 +68,14 @@ do ($ = jQuery) ->
       ok $hidden.length > 0
       equal $hidden.attr('name'), 'foo'
 
+  test 'it adds the autofocus attribute from originalInput', ->
+    expect 2
+    @inputs.attr('autofocus', 'autofocus')
+
+    @inputs.mentionsKinder().each ->
+      $editable = $(@).parents('.mentions-kinder-wrap').find('.mentions-kinder')
+      equal $editable.attr('autofocus'), 'autofocus'
+
   test 'it adds a placeholder span if placeholder attribute is set', ->
     expect 4
     @inputs.attr('placeholder', 'My Placeholder')

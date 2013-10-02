@@ -45,6 +45,8 @@ class MentionsKinder
 
     @_setupElements()
     @_setupEvents()
+    # trigger focus, because contenteditable divs doesn't support html5 autofocus
+    @$editable.focus() if @$editable.attr('autofocus')
 
   handleInput: (e)=>
     charCode = e.charCode || e.which || e.keyCode
@@ -303,22 +305,28 @@ class MentionsKinder
   # assigns @$wrap, @$editable and @$input
   # requires @$originalInput
   _setupElements: ->
+    # create wrap, editable and hidden input
     @$wrap = $('<div class="mentions-kinder-wrap"></div>')
     @$editable = $('<div class="form-control mentions-kinder" contenteditable="true"></div>')
     @$editable.addClass("mentions-kinder-#{if @multiline then 'multiline' else 'singleline'}")
     @$input = $("<input type='hidden'/>")
+    # set relevant attributes and values
     @$input.attr('name', @$originalInput.attr('name'))
     @$input.val(@$originalInput.val())
     @$editable.addClass(@$originalInput.attr("class"))
+    if autofocus = @$originalInput.attr('autofocus')
+      @$editable.attr('autofocus', autofocus)
+    # deserialize input value
     @deserializeFromInput() unless @$originalInput.val() == ''
+    # initialize Placeholder
     if placeholder = @$originalInput.attr('placeholder')
       @$placeholder = $("<span class='placeholder'>#{placeholder}</span>").appendTo(@$editable)
-
+    # hide, show and append all those elements
     @$wrap.insertAfter(@$originalInput)
     @$originalInput.hide().appendTo(@$wrap)
     @$input.appendTo(@$wrap)
     @$editable.appendTo(@$wrap)
-
+    # return
     undefined
 
   _setupEvents: ->
