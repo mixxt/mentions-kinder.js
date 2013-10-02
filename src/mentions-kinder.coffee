@@ -1,5 +1,5 @@
 ###
-  Base class
+  MentionsKinder base class
 ###
 class MentionsKinder
   KEY = { RETURN: 13, ESC: 27 }
@@ -24,7 +24,7 @@ class MentionsKinder
 
     deserializeRegex: /\[(.)(.+?)\]\((\w+):(.+?)\)/g
 
-
+  # default trigger options
   triggerDefaultOptions:
     autocompleter: Autocompleter
     formatter: (data)->
@@ -39,6 +39,7 @@ class MentionsKinder
       "[#{data.trigger}#{data.name}](#{data.triggerOptions.triggerName}:#{data.value})"
 
   # le constructor
+  # setup mentions kinder
   constructor: (element, options)->
     @_ensureInput(element)
     @_buildOptions(options)
@@ -48,43 +49,26 @@ class MentionsKinder
     # trigger focus, because contenteditable divs doesn't support html5 autofocus
     @$editable.focus() if @$editable.attr('autofocus')
 
-  handleInput: (e)=>
-    charCode = e.charCode || e.which || e.keyCode
-    char = String.fromCharCode(charCode)
-    if !@isAutocompleting() && @trigger[char]
-      e.preventDefault()
-      @startAutocomplete(char)
+  # serialize text and set it to the hidden field
+  populateInput: =>
+    val = @serializeEditable()
+    @$input?.val(val)
 
-    # don't allow newline in singleline input
-    if charCode == KEY.RETURN && !@multiline
-      e.preventDefault()
-      if @submitOnEnter
-        @$form.submit()
+  # serialize the editable element
+  serializeEditable: ->
+    @_serializeNode(@$editable[0]).join('')
 
-  handleKeyup: (e)=>
-    if @isAutocompleting()
-      @updateAutocomplete()
+  # Deserialize the original input into the editable
+  deserializeFromInput: =>
+    @$editable.html @_deserialize(@$originalInput.val())
 
-    switch e.keyCode
-      # abort if escape is pressed
-      when KEY.ESC
-        @abortAutocomplete()
-
-    # abort if the cursor left the temp mention
-    if @isAutocompleting() && !@_isCaretInTempMention()
-      @abortAutocomplete()
-
-    # set plaintext to our hidden field
-    @populateInput()
-
-  handlePaste: =>
-    # defer, content is not in yet
-    setTimeout(@cleanEditable, 0)
-
+  # Helper method
   # un**** our editable after paste or other ****
   cleanEditable: =>
-    @cleanChildNodes(@$editable[0])
+    @_cleanChildNodes(@$editable[0])
 
+  # start autocompletion for trigger char
+  # Create new temp mention, create autompleter and set caret correctly
   startAutocomplete: (triggerChar)->
     @_current = {
       trigger: triggerChar,
@@ -106,6 +90,7 @@ class MentionsKinder
     @_current.autocompleter.always(@populateInput)
     @_current.autocompleter.search('')
 
+  # update autocompletion
   updateAutocomplete: ->
     text = @_current.$tempMention.text()
     triggerLength = @_current.trigger.length
@@ -117,6 +102,7 @@ class MentionsKinder
     else
       @abortAutocomplete()
 
+  # check if there is an autocompletion started
   isAutocompleting: ->
     if @_current?
       if $.contains(@$editable, @_current.$tempMention)
@@ -128,10 +114,13 @@ class MentionsKinder
     else
       false
 
-
+  # abort the autocompletion
   abortAutocomplete: ->
     @isAutocompleting() && @_current.autocompleter.abort()
 
+  # Event handler
+  # autocompleter done
+  # Create valid mention and add it to the editable
   handleAutocompleteDone: (data)=>
     # add current trigger state to data to allow access from formatters and serializers
     data = $.extend({}, @_current, data)
@@ -150,6 +139,9 @@ class MentionsKinder
 
     @_current = null
 
+  # Event handler
+  # autocomplete fail
+  # No mention created, transform temp mention to text node
   handleAutocompleteFail: =>
     # convert to text
     textNode = document.createTextNode(@_current.$tempMention.text())
@@ -159,10 +151,59 @@ class MentionsKinder
 
     @_current = null
 
+  # Event handler
+  # keypress
+  # Invoke autocompleter if possible trigger char found
+  # Check enter key in single line inputs to trigger form submit (default single line input behaviour)
+  handleInput: (e)=>
+    charCode = e.charCode || e.which || e.keyCode
+    char = String.fromCharCode(charCode)
+    if !@isAutocompleting() && @trigger[char]
+      e.preventDefault()
+      @startAutocomplete(char)
+
+    # don't allow newline in singleline input
+    if charCode == KEY.RETURN && !@multiline
+      e.preventDefault()
+      @$form.submit() if @submitOnEnter
+
+  # Event handler
+  # keyup
+  # Update or cancel autocompleter
+  # Update hidden field with serialized text
+  handleKeyup: (e)=>
+    if @isAutocompleting()
+      @updateAutocomplete()
+
+    switch e.keyCode
+      # abort if escape is pressed
+      when KEY.ESC
+        @abortAutocomplete()
+
+    # abort if the cursor left the temp mention
+    if @isAutocompleting() && !@_isCaretInTempMention()
+      @abortAutocomplete()
+
+    # set plaintext to our hidden field
+    @populateInput()
+
+  # Event handler
+  # paste
+  # Cleanup editable
+  handlePaste: =>
+    # defer, content is not in yet
+    setTimeout(@cleanEditable, 0)
+
+  # Event handler
+  # (form) reset
+  # reset editable
   handleReset: =>
     @$editable.empty().blur()
     @$input.val(@$originalInput.val())
 
+  # Event handler
+  # (form) reset, blur, focus
+  # show/hide the placeholder
   handlePlaceholder: (e)=>
     if e.type == 'focus'
       @$placeholder?.detach()
@@ -170,6 +211,9 @@ class MentionsKinder
       if @_strip(@serializeEditable()) == ''
         @$editable.empty().append(@$placeholder)
 
+  # Event handler
+  # click
+  # delete mention on click
   handleDelete: (e)=>
     e.preventDefault()
     $currentMentionNode = $(e.target).parents('.mention')
@@ -178,112 +222,7 @@ class MentionsKinder
       @_setCaretToStartOf(nextNode) if nextNode
       $currentMentionNode.remove()
 
-  populateInput: =>
-    val = @serializeEditable()
-    @$input?.val(val)
-
-  serializeEditable: ->
-    @serializeNode(@$editable[0]).join('')
-
-  serializeNode: (parentNode)->
-    textNodes = []
-    for node in parentNode.childNodes
-      # is text node, append text
-      if node.nodeType == 3 # nodeType 3 is a text node
-        textNodes.push node.data
-      # is br node, append newline
-      else if node.nodeName.toUpperCase() == 'BR'
-        textNodes.push "\n"
-      # is mention, append serializedMention
-      else if serializedMention = $(node).attr('serialized-mention')
-        textNodes.push serializedMention
-      # is p or div, append newline and serialize children
-      else if node.nodeName.toUpperCase() == 'P' || node.nodeName.toUpperCase() == 'DIV'
-        # add newline only if first child is not a br-node, prevent endless new line duplicating
-        textNodes.push("\n") unless node.childNodes[0]?.nodeName?.toUpperCase() == 'BR'
-        textNodes = textNodes.concat @serializeNode(node)
-      # is any other tag, serialize children
-      else
-        textNodes = textNodes.concat @serializeNode(node)
-    textNodes
-
-  # if we remove items from nodeList it is updated live, that results in missed nodes
-  # therefore we save the node references in an array and iterate over that
-  cloneReferences = (nodes)->
-    for node in nodes
-      node
-
-  # iterate over child nodes and clean them
-  cleanChildNodes: (parentNode)->
-    for node in cloneReferences(parentNode.childNodes)
-      @cleanNode(node)
-
-    true
-
-  # clean a single node
-  # recurses into child nodes
-  # TODO keep <br>'s
-  cleanNode: (node)->
-    # dont clean text nodes or mention nodes
-    if node.nodeType == 3
-      # do nothing
-    else if node.nodeName == 'BR'
-      $(node).replaceWith(' ') unless @multiline # clean breaks in single line inputs
-    else if $(node).attr('serialized-mention')
-      $(node).attr('contenteditable', false) # ensure contenteditable is set after paste
-    else
-      # clean all children and replace node with them
-      if node.childNodes?.length > 0
-        @cleanChildNodes(node)
-        $(node).replaceWith(node.childNodes)
-      # remove node
-      else
-        $(node).remove()
-
-    true
-
-  deserializeFromInput: =>
-    @$editable.html @_deserialize(@$originalInput.val())
-
-  _deserialize: (text)->
-    result = []
-    regex = @options.deserializeRegex
-    #console.log "START", text
-    pointer = 0
-
-    # deserialize magic
-    loop
-      match = regex.exec(text)
-      if match
-        # add text before matched token
-        unless match.index == 0
-          #console.log "LOOP substring from #{pointer} to #{match.index}", text.substring(pointer, match.index)
-          @_deserializeText.call(result, text.substring(pointer, match.index))
-          #result.push document.createTextNode(text.substring(pointer, match.index))
-        pointer = regex.lastIndex
-        # deserialize matched token
-        #console.log "LOOP deserialize", match[0]
-        result.push @options.deserialize.apply(@, match)
-      else
-        unless pointer == text.length
-          #console.log "LAST substring from #{pointer} to #{text.length}", text.substring(pointer, text.length)
-          lastText = text.substring(pointer, text.length)
-          @_deserializeText.call(result, lastText) unless lastText == ''
-          #result.push document.createTextNode(lastText)  unless lastText == ''
-        break
-    # return array of nodes
-    #console.log "RESULT", result, "\n\n"
-    result
-
-  # Split text into lines and add br-nodes to keep line breaks
-  # musst be called with array as context (this), for example see _deserialize a few lines above
-  _deserializeText: (text)->
-    #console.log "_deserializeText", text
-    lines = text.split("\n")
-    for line, i in lines
-      @push document.createTextNode(line)
-      @push document.createElement('br') unless i == lines.length - 1
-
+  # Check if $.mentionsKinder is seting up to the correct element
   _ensureInput: (element)->
     @$originalInput = $(element)
     unless @$originalInput.is('input[type=text],textarea')
@@ -291,6 +230,7 @@ class MentionsKinder
 
     @multiline = @$originalInput.is('textarea')
 
+  # Create default flavoured option objects
   _buildOptions: (options)->
     # build options
     @options = $.extend {}, @defaultOptions, options
@@ -329,6 +269,7 @@ class MentionsKinder
     # return
     undefined
 
+  # Bind all necessary events
   _setupEvents: ->
     # editable events
     @$editable.bind 'keypress', @handleInput
@@ -345,6 +286,107 @@ class MentionsKinder
       @$form.on('reset', @handleReset)
       @$form.on('reset', @handlePlaceholder)
 
+  # if we remove items from nodeList it is updated live, that results in missed nodes
+  # therefore we save the node references in an array and iterate over that
+  cloneReferences = (nodes)->
+    for node in nodes
+      node
+
+  # Helper method to clean cloned nodes
+  # iterate over child nodes and clean them
+  _cleanChildNodes: (parentNode)->
+    for node in cloneReferences(parentNode.childNodes)
+      @_cleanNode(node)
+
+    true
+
+  # Helper method to clean a single node
+  # recurses into child nodes
+  _cleanNode: (node)->
+    # dont clean text nodes or mention nodes
+    if node.nodeType == 3
+      # do nothing
+    else if node.nodeName == 'BR'
+      $(node).replaceWith(' ') unless @multiline # clean breaks in single line inputs
+    else if $(node).attr('serialized-mention')
+      $(node).attr('contenteditable', false) # ensure contenteditable is set after paste
+    else
+      # clean all children and replace node with them
+      if node.childNodes?.length > 0
+        @_cleanChildNodes(node)
+        $(node).replaceWith(node.childNodes)
+      # remove node
+      else
+        $(node).remove()
+
+    true
+
+  # Helper Method toserialize a node, support for different node types
+  _serializeNode: (parentNode)->
+    textNodes = []
+    for node in parentNode.childNodes
+      # is text node, append text
+      if node.nodeType == 3 # nodeType 3 is a text node
+        textNodes.push node.data
+        # is br node, append newline
+      else if node.nodeName.toUpperCase() == 'BR'
+        textNodes.push "\n"
+        # is mention, append serializedMention
+      else if serializedMention = $(node).attr('serialized-mention')
+        textNodes.push serializedMention
+        # is p or div, append newline and serialize children
+      else if node.nodeName.toUpperCase() == 'P' || node.nodeName.toUpperCase() == 'DIV'
+        # add newline only if first child is not a br-node, prevent endless new line duplicating
+        textNodes.push("\n") unless node.childNodes[0]?.nodeName?.toUpperCase() == 'BR'
+        textNodes = textNodes.concat @_serializeNode(node)
+        # is any other tag, serialize children
+      else
+        textNodes = textNodes.concat @_serializeNode(node)
+
+    textNodes
+
+  # Helper Method to deserialize given text into nodes
+  _deserialize: (text)->
+    result = []
+    regex = @options.deserializeRegex
+    #console.log "START", text
+    pointer = 0
+
+    # deserialize magic
+    loop
+      match = regex.exec(text)
+      if match
+        # add text before matched token
+        unless match.index == 0
+          #console.log "LOOP substring from #{pointer} to #{match.index}", text.substring(pointer, match.index)
+          @_deserializeText.call(result, text.substring(pointer, match.index))
+          #result.push document.createTextNode(text.substring(pointer, match.index))
+        pointer = regex.lastIndex
+        # deserialize matched token
+        #console.log "LOOP deserialize", match[0]
+        result.push @options.deserialize.apply(@, match)
+      else
+        unless pointer == text.length
+          #console.log "LAST substring from #{pointer} to #{text.length}", text.substring(pointer, text.length)
+          lastText = text.substring(pointer, text.length)
+          @_deserializeText.call(result, lastText) unless lastText == ''
+          #result.push document.createTextNode(lastText)  unless lastText == ''
+        break
+    # return array of nodes
+    #console.log "RESULT", result, "\n\n"
+    result
+
+  # Helper method for _deserialize
+  # Split text into lines and add br-nodes to keep line breaks
+  # musst be called with array as context (this), for example see _deserialize a few lines above
+  _deserializeText: (text)->
+    #console.log "_deserializeText", text
+    lines = text.split("\n")
+    for line, i in lines
+      @push document.createTextNode(line)
+      @push document.createElement('br') unless i == lines.length - 1
+
+  # Helper method to create a proper rangy selection
   _prepareSetCaretTo: (node)->
     selection = rangy.getSelection()
     range = selection.getRangeAt(0)
@@ -352,17 +394,21 @@ class MentionsKinder
     selection.setSingleRange(range)
     selection
 
+  # Collapse selection to the end
   _setCaretToEndOf: (node)->
     @_prepareSetCaretTo(node).collapseToEnd()
 
+  # Collapse selection to the beginning
   _setCaretToStartOf: (node)->
     @_prepareSetCaretTo(node).collapseToStart()
 
+  # Helper method to check if caret is in the current temp mention
   _isCaretInTempMention: ->
     if @isAutocompleting()
       range = rangy.getSelection().getRangeAt(0)
       range?.compareNode(@_current.$tempMention.get(0)) == range.NODE_BEFORE_AND_AFTER
 
+  # Helper method to strip whitespaces from start/end of text
   _strip: (text)->
     text.replace(/^\s*(.*?)\s*$/gm, '$1')
 
