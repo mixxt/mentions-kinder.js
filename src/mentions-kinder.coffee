@@ -219,8 +219,12 @@ class MentionsKinder
     $currentMentionNode = $(e.target).parents('.mention')
     if $currentMentionNode
       nextNode = $currentMentionNode.get(0).nextSibling
+      # set caret to beginning of the next node
       @_setCaretToStartOf(nextNode) if nextNode
+      # then remove the current mention node
       $currentMentionNode.remove()
+      # serialize text and set it to the hidden input
+      @populateInput()
 
   # Check if $.mentionsKinder is seting up to the correct element
   _ensureInput: (element)->
