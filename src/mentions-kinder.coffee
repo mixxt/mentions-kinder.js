@@ -67,6 +67,11 @@ class MentionsKinder
   cleanEditable: =>
     @_cleanChildNodes(@$editable[0])
 
+  # can be called from outer space to set focus on mentions-kinder editable
+  # EXAMPLE: $('textarea').data('mentionsKinder').focus()
+  focus: ->
+    @$editable.focus()
+
   # start autocompletion for trigger char
   # Create new temp mention, create autompleter and set caret correctly
   startAutocomplete: (triggerChar)->
