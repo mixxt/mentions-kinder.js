@@ -9,6 +9,7 @@ class MentionsKinder
       '@': {
         triggerName: 'member'
       } # inherit default
+    # default deserialize method formats the matched token with the trigger formatter
     deserialize: (matchedToken, trigger, name, triggerName, value)->
       formatter = @options.trigger[trigger]?.formatter
       if formatter
@@ -21,12 +22,14 @@ class MentionsKinder
         ).get(0)
       else
         document.createTextNode(matchedToken)
-
+    # default regex for deserialize, matches will be deserialized with the method above
     deserializeRegex: /\[(.)(.+?)\]\((\w+):(.+?)\)/g
 
-  # default trigger options
+  # default trigger options, will be the defaults for trigger options
   triggerDefaultOptions:
+    # an autocompleter object
     autocompleter: Autocompleter
+    # a formatter must return a html node or jquery wrapped html node
     formatter: (data)->
       $trigger = $("<span class='#{data.triggerOptions.triggerName}-trigger'></span>").text(data.trigger)
       $value = $("<span class='#{data.triggerOptions.triggerName}-value'></span>").text(data.name)
@@ -35,6 +38,7 @@ class MentionsKinder
       $mention.append([$trigger, $value, $deleteHandle])
       $mention.attr('serialized-mention', data.serializedMention)
       $mention
+    # serializer gets the mention data and must return a string
     serializer: (data)->
       "[#{data.trigger}#{data.name}](#{data.triggerOptions.triggerName}:#{data.value})"
 
