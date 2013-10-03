@@ -57,6 +57,7 @@ class MentionsKinder
   populateInput: =>
     val = @serializeEditable()
     @$input?.val(val)
+    @$originalInput.trigger('mentions-kinder-change', val)
 
   # serialize the editable element
   serializeEditable: ->

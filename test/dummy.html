@@ -34,6 +34,12 @@
     <h4>Single line mode</h4>
     <input type="text" class="multiple" />
 
+    <h4>Events</h4>
+    <p>Fires <strong>mentions-kinder-change</strong> event on the original input</p>
+    <p>$('#event_test').on('mentions-kinder-change', function(event, text) { $('#event_log').text(text) })</p>
+    <pre id="event_log"></pre>
+    <textarea class="multiple" name="text5" id="event_test" placeholder="Whats up?"></textarea>
+
     <div class="form-actions" style="clear: both">
         <input class="btn btn-default" type="reset" />
     </div>
@@ -84,6 +90,9 @@ $(function(){
             }
         }
     }).enableMyDebug();
+
+    // bind "mentions-kinder-change" event
+    $('#event_test').on('mentions-kinder-change', function(event, text) { $('#event_log').text(text) })
 });
 </script>
 </body>
