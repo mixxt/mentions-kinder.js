@@ -4,7 +4,7 @@ mentions-kinder.js
 =================
 Mentions-Kinder is a simple and powerful input ui component that enables mentions in a text message, like in Facebook or Google+.
 
-This project is massively inspired by the jquery-mentions-input ([Link](https://github.com/podio/jquery-mentions-input)).
+This project is massively inspired by the [jquery-mentions-input](https://github.com/podio/jquery-mentions-input).
 We maintained a version internally which consisted various patches from forks, but we run into too many errors and it isn't supported anymore, so we decided to try a clean rewrite.
 
 New features, better support and a modern approach!
@@ -21,7 +21,7 @@ http://mixxt.github.io/mentions-kinder.js
 - Browser Support: IE8+, Firefox, Chrome
 - Multiple trigger chars (for example: # => tags, @ => mentions, ! => priority)
 - Configurable output syntax
-- Configurable autocompleters (for example: select2)
+- Configurable autocompleters (for example select2 or a static value list)
 - Mime default behaviours (autofocus or submit on return in single line inputs)
 - Unit Tests
 
