@@ -56,6 +56,11 @@ $('textarea').mentionsKinder()
     ```bash
     grunt server
     ```
+4. If you develop a feature? Use a feature branch!
+
+    ```bash
+    git checkout -b feature-name_of_my_feature
+    ```
 
 ## Create distribution
 1.  Bump version in **package.json** and **mentions-kinder.jquery.json**
