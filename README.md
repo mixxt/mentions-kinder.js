@@ -64,9 +64,10 @@ $('textarea').mentionsKinder()
 
 ## Create distribution
 1.  Bump version in **package.json** and **mentions-kinder.jquery.json**
-2.  Commit Version
+2.  Add and commit version bump
 
     ```bash
+    git add .
     git commit -m "Bump version to x.x.x"
     ```
 3.  Create distribution branch (__dist-x.x.x__)
