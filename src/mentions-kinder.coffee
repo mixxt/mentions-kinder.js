@@ -66,6 +66,7 @@ class MentionsKinder
   # Deserialize the original input into the editable
   deserializeFromInput: =>
     @$editable.html @_deserialize(@$originalInput.val())
+    @populateInput()
 
   # Helper method
   # un**** our editable after paste or other ****
