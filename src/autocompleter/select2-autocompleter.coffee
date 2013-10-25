@@ -27,4 +27,4 @@ Autocompleter.Select2Autocompleter = Autocompleter.extend {
 
 }
 
-MentionsKinder.triggerDefaultOptions.autocompleter = Autocompleter.Select2Autocompleter
+MentionsKinder::triggerDefaultOptions.autocompleter = Autocompleter.Select2Autocompleter

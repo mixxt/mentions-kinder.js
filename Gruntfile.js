@@ -44,7 +44,7 @@ module.exports = function(grunt) {
                     'tmp/src/autocompleter.js',
                     'tmp/src/mentions-kinder.js',
                     'src/extend-patch.js',
-                    'tmp/src/autocompleter/dummy-autocompleter.js',
+//                    'tmp/src/autocompleter/dummy-autocompleter.js',
                     'tmp/src/autocompleter/select2-autocompleter.js',
                     'tmp/src/jquery-plugin.js'
                 ],
@@ -56,7 +56,7 @@ module.exports = function(grunt) {
                     'tmp/src/autocompleter.js',
                     'tmp/src/mentions-kinder.js',
                     'src/extend-patch.js',
-                    'tmp/src/autocompleter/dummy-autocompleter.js',
+//                    'tmp/src/autocompleter/dummy-autocompleter.js',
                     'tmp/src/autocompleter/select2-autocompleter.js',
                     'tmp/src/jquery-plugin.js'
                 ],
@@ -68,7 +68,7 @@ module.exports = function(grunt) {
                     'tmp/src/autocompleter.js',
                     'tmp/src/mentions-kinder.js',
                     'src/extend-patch.js',
-                    'tmp/src/autocompleter/dummy-autocompleter.js',
+//                    'tmp/src/autocompleter/dummy-autocompleter.js',
                     'tmp/src/autocompleter/select2-autocompleter.js',
                     'libs/rangy-1.2.3/uncompressed/rangy-core.js',
                     'tmp/src/jquery-plugin.js',
