@@ -43,11 +43,10 @@ module.exports = function(grunt) {
                 src: [
                     'tmp/src/autocompleter.js',
                     'tmp/src/mentions-kinder.js',
-                    'tmp/src/jquery-plugin.js',
                     'src/extend-patch.js',
                     'tmp/src/autocompleter/dummy-autocompleter.js',
-                    'tmp/src/autocompleter/select2-autocompleter.js'
-//                    'tmp/src/autocompleter/typeahead-autocompleter.js'
+                    'tmp/src/autocompleter/select2-autocompleter.js',
+                    'tmp/src/jquery-plugin.js'
                 ],
                 dest: 'tmp/<%= pkg.name %>.js',
                 nonull: true
@@ -56,11 +55,10 @@ module.exports = function(grunt) {
                 src: [
                     'tmp/src/autocompleter.js',
                     'tmp/src/mentions-kinder.js',
-                    'tmp/src/jquery-plugin.js',
                     'src/extend-patch.js',
                     'tmp/src/autocompleter/dummy-autocompleter.js',
-                    'tmp/src/autocompleter/select2-autocompleter.js'
-//                    'tmp/src/autocompleter/typeahead-autocompleter.js'
+                    'tmp/src/autocompleter/select2-autocompleter.js',
+                    'tmp/src/jquery-plugin.js'
                 ],
                 dest: 'dist/<%= pkg.name %>.js',
                 nonull: true
@@ -69,12 +67,12 @@ module.exports = function(grunt) {
                 src: [
                     'tmp/src/autocompleter.js',
                     'tmp/src/mentions-kinder.js',
-                    'tmp/src/jquery-plugin.js',
                     'src/extend-patch.js',
                     'tmp/src/autocompleter/dummy-autocompleter.js',
                     'tmp/src/autocompleter/select2-autocompleter.js',
-                    'libs/rangy-1.2.3/uncompressed/rangy-core.js'
-//                    'tmp/src/autocompleter/typeahead-autocompleter.js'
+                    'libs/rangy-1.2.3/uncompressed/rangy-core.js',
+                    'tmp/src/jquery-plugin.js',
+                    'tmp/src/init-rangy.js'
                 ],
                 dest: 'dist/<%= pkg.name %>.rangy.js',
                 nonull: true
