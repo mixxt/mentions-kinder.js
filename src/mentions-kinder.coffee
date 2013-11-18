@@ -220,18 +220,16 @@ class MentionsKinder
     if e.type == 'focus'
       # do this only if placeholder is currently in DOM
       unless @placeholderDetached
-        # create textnode and prepend it to the $editable
-        # neccessary to place caret properly before detaching the placeholder
-        textNode = document.createTextNode('')
-        @$editable.prepend(textNode)
         # the following code should be called detached from this focus callback function
         # otherwise rangy failed because focus isn't finished and caret has not been placed yet
         window.setTimeout(=>
-          # place caret to the empty textNode at the beginning of $editable
-          @_setCaretToStartOf(textNode)
           # detach placeholder element
           @$placeholder.detach()
           @placeholderDetached = true
+          # create textnode and prepend it to the $editable
+          # neccessary to place caret properly before detaching the placeholder
+          textNode = document.createTextNode('')
+          @$editable.html(textNode).focus()
         )
     else if e.type == 'blur' || e.type == 'reset'
       if @_strip(@serializeEditable()) == ''
