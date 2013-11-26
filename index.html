@@ -34,19 +34,16 @@ title: mentions-kinder.js simple demo
 
 <h4>Changes to original Input</h4>
 <p>Fires <strong>change</strong> event on the original input<br />Last change: <time id="event_timestamp"></time></p>
-
 <textarea class="multiple" name="text5" id="event_test" placeholder="Whats up?"></textarea>
-
-<div class="form-actions">
-    <input class="btn btn-default" type="reset" />
-</div>
 
 <h4>Preset value</h4>
 <p>Is used to initialize and persists on reset</p>
-<textarea class="multiple">I have some data already [#preset](tag:preset)</textarea>
-<div class="form-actions">
-    <input class="btn btn-default" type="reset" />
-</div>
+<form onsubmit="return false">
+    <textarea class="multiple">I have some data already [#preset](tag:preset)</textarea>
+    <div class="form-actions">
+        <input class="btn btn-default" type="reset" />
+    </div>
+</form>
 <script>
 
     // configure autocompleter by extending from a base autocompleter
