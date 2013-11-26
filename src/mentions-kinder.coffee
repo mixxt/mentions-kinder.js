@@ -1,3 +1,13 @@
+# This is sprockets manifest file, which allows easy integration into a rails project
+# Just clone this repo into vendor/assets/javascripts/mentions-kinder and require mentions-kinder/src/mentions-kinder
+#
+
+#= require_self
+#= require ./autocompleter
+#= require ./extend-patch
+#= require ./autocompleter/select2-autocompleter
+#= require ./jquery-plugin
+
 ###
   MentionsKinder base class
 ###
