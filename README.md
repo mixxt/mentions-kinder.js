@@ -4,7 +4,7 @@ mentions-kinder is a simple and powerful input ui component that introduces all 
 It tries to be as configurable and customizable as possible while providing a basic setup you can use right away.
 
 This project is massively inspired by the [jquery-mentions-input](https://github.com/podio/jquery-mentions-input).
-We maintained a version internally, collection various patches and features from forks, but run into too many errors. That's why we decided to write our own version with a few different ideas.
+We maintained a version internally, collecting various patches and features from forks, but run into too many errors. That's why we decided to write our own version with a few different ideas.
 
 The name is a pun on the german exclamation [Menschenskinder](http://www.dict.cc/?s=menschenskinder), which sounds exactly like mentions-kinder.
 It can also be interpreted in the way, that this plugin provides all kinds of mentions.
