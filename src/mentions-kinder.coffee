@@ -1,7 +1,7 @@
 ###
   MentionsKinder base class
 ###
-class MentionsKinder
+class @MentionsKinder
   KEY = { RETURN: 13, ESC: 27 }
   # default options, exposed under $.mentionsKinder.defaultOptions
   defaultOptions:
@@ -28,7 +28,7 @@ class MentionsKinder
   # default trigger options, will be the defaults for trigger options
   triggerDefaultOptions:
     # an autocompleter object
-    autocompleter: Autocompleter
+    autocompleter: MentionsKinder.Autocompleter
     # a formatter must return a html node or jquery wrapped html node
     formatter: (data)->
       $trigger = $("<span class='#{data.triggerOptions.triggerName}-trigger'></span>").text(data.trigger)
@@ -435,5 +435,3 @@ class MentionsKinder
   # Helper method to strip whitespaces from start/end of text
   _strip: (text)->
     text.replace(/^\s*(.*?)\s*$/gm, '$1')
-
-MentionsKinder.Autocompleter = Autocompleter

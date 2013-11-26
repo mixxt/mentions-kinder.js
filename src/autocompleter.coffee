@@ -1,7 +1,7 @@
 ###
   Autocompleter Base
 ###
-class Autocompleter
+class MentionsKinder.Autocompleter
   constructor: (options = {})->
     @mentionsKind = options.mentionsKind
     @options = options

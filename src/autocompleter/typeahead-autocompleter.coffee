@@ -1,6 +1,6 @@
 ###
   Autocompleter that utilizes Twitter Typeahead
 ###
-class Autocompleter.Typeahead extends Autocompleter
+class MentionsKinder.Autocompleter.Typeahead extends Autocompleter
 
 

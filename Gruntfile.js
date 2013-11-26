@@ -17,9 +17,6 @@ module.exports = function(grunt) {
         },
         coffee: {
             dev:{
-                options: {
-                    bare: true
-                },
                 expand: true,
                 cwd: 'src',
                 src: ['**/*.coffee'],
@@ -41,8 +38,8 @@ module.exports = function(grunt) {
             },
             dev: {
                 src: [
-                    'tmp/src/autocompleter.js',
                     'tmp/src/mentions-kinder.js',
+                    'tmp/src/autocompleter.js',
                     'src/extend-patch.js',
 //                    'tmp/src/autocompleter/dummy-autocompleter.js',
                     'tmp/src/autocompleter/select2-autocompleter.js',
@@ -53,8 +50,8 @@ module.exports = function(grunt) {
             },
             dist: {
                 src: [
-                    'tmp/src/autocompleter.js',
                     'tmp/src/mentions-kinder.js',
+                    'tmp/src/autocompleter.js',
                     'src/extend-patch.js',
 //                    'tmp/src/autocompleter/dummy-autocompleter.js',
                     'tmp/src/autocompleter/select2-autocompleter.js',
@@ -65,8 +62,8 @@ module.exports = function(grunt) {
             },
             dist_rangy: {
                 src: [
-                    'tmp/src/autocompleter.js',
                     'tmp/src/mentions-kinder.js',
+                    'tmp/src/autocompleter.js',
                     'src/extend-patch.js',
 //                    'tmp/src/autocompleter/dummy-autocompleter.js',
                     'tmp/src/autocompleter/select2-autocompleter.js',

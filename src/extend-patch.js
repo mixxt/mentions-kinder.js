@@ -36,4 +36,4 @@ var extend = function(protoProps, staticProps) {
     return child;
 };
 
-MentionsKinder.extend = Autocompleter.extend = extend;
+MentionsKinder.extend = MentionsKinder.Autocompleter.extend = extend;

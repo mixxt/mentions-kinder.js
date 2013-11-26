@@ -1,7 +1,7 @@
 ###
   Autocompleter that utilizes select2
 ###
-Autocompleter.Select2Autocompleter = Autocompleter.extend {
+MentionsKinder.Autocompleter.Select2Autocompleter = MentionsKinder.Autocompleter.extend {
   select2Options: {
     data: []
   }
@@ -27,4 +27,4 @@ Autocompleter.Select2Autocompleter = Autocompleter.extend {
 
 }
 
-MentionsKinder::triggerDefaultOptions.autocompleter = Autocompleter.Select2Autocompleter
+MentionsKinder::triggerDefaultOptions.autocompleter = MentionsKinder.Autocompleter.Select2Autocompleter
