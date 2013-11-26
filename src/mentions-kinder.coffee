@@ -87,7 +87,7 @@ class @MentionsKinder
 
   # can be called from outer space to set focus on mentions-kinder editable
   # EXAMPLE: $('textarea').data('mentionsKinder').focus()
-  focus: ->
+  focus: =>
     @$editable.focus()
 
   # start autocompletion for trigger char
@@ -312,6 +312,7 @@ class @MentionsKinder
     @$editable.bind 'focus blur', @handlePlaceholder
     @$editable.on 'click', '.delete-mention', @handleDelete
     # input events
+    @$originalInput.on 'focus', @focus
     @$originalInput.on 'change', (e)=>
       @deserializeFromInput() unless e.mentionsKinder
     # form related events
