@@ -57,16 +57,7 @@ do ($ = jQuery) ->
     expect 2
 
     @inputs.mentionsKinder().each ->
-      ok $(@).is(':hidden')
-
-  test 'it adds hidden input with name from input', ->
-    expect 4
-    @inputs.attr('name', 'foo')
-
-    @inputs.mentionsKinder().each ->
-      $hidden = $(@).parents('.mentions-kinder-wrap').find('input[type=hidden]')
-      ok $hidden.length > 0
-      equal $hidden.attr('name'), 'foo'
+      ok $(@).hasClass('mentions-kinder-hidden')
 
   test 'it adds the autofocus attribute from originalInput', ->
     expect 2

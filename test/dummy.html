@@ -33,14 +33,30 @@
 
     <h4>Single line mode</h4>
     <input type="text" class="multiple" />
+    </div>
 
-    <h4>Events</h4>
-    <p>Fires <strong>mentions-kinder-change</strong> event on the original input</p>
-    <p>$('#event_test').on('mentions-kinder-change', function(event, text) { $('#event_log').text(text) })</p>
-    <pre id="event_log"></pre>
+    <h4>External changes</h4>
+    <p>Setting value on original input and triggering change updates the editable and hidden input</p>
+    <textarea class="multiple" name="text6" placeholder="Push my buttons"></textarea>
+    <div class="form-actions">
+        Priority
+        <button class="btn" type="button" data-action="set-flag" data-target="textarea[name=text6]">!high</button>
+        <button class="btn" type="button" data-action="set-flag" data-target="textarea[name=text6]">!low</button>
+    </div>
+
+    <h4>Changes to original Input</h4>
+    <p>Fires <strong>change</strong> event on the original input<br />Last change: <time id="event_timestamp"></time></p>
+
     <textarea class="multiple" name="text5" id="event_test" placeholder="Whats up?"></textarea>
 
-    <div class="form-actions" style="clear: both">
+    <div class="form-actions">
+        <input class="btn btn-default" type="reset" />
+    </div>
+
+    <h4>Preset value</h4>
+    <p>Is used to initialize and persists on reset</p>
+    <textarea class="multiple">I have some data already [#preset](tag:preset)</textarea>
+    <div class="form-actions">
         <input class="btn btn-default" type="reset" />
     </div>
 </form>
@@ -91,8 +107,24 @@ $(function(){
         }
     }).enableMyDebug();
 
-    // bind "mentions-kinder-change" event
-    $('#event_test').on('mentions-kinder-change', function(event, text) { $('#event_log').text(text) })
+    // bind "change" event
+    $('#event_test').on('change', function(event) { $('#event_timestamp').text(new Date) });
+
+
+    $(document.body).on('click', '[data-action=set-flag]', function(e){
+        var $button = $(e.currentTarget),
+            $target = $($button.data('target')),
+            flag = $button.text(),
+            regex = /(?:^|\s+)!(\w+)/i,
+            val = $target.val();
+
+        if(val.match(regex))
+            val = val.replace(regex, ' ' + flag);
+        else
+            val = val + ' ' + flag;
+
+        $target.val(val).change()
+    });
 });
 </script>
 </body>

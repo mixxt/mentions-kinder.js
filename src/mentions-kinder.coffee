@@ -56,8 +56,11 @@ class MentionsKinder
   # serialize text and set it to the hidden field
   populateInput: =>
     val = @serializeEditable()
-    @$input?.val(val)
-    @$originalInput.trigger('mentions-kinder-change', val)
+    @$originalInput.val(val).trigger(
+      type: "change",
+      mentionsKinder: true
+    )
+    @$originalInput.trigger('mentions-kinder-change', val) # DEPRECATED
 
   # serialize the editable element
   serializeEditable: ->
@@ -66,7 +69,6 @@ class MentionsKinder
   # Deserialize the original input into the editable
   deserializeFromInput: =>
     @$editable.html @_deserialize(@$originalInput.val())
-    @populateInput()
 
   # Helper method
   # un**** our editable after paste or other ****
@@ -210,14 +212,17 @@ class MentionsKinder
   # reset editable
   handleReset: =>
     @$editable.empty().blur()
-    @$input.val(@$originalInput.val())
+    setTimeout(=>
+      @deserializeFromInput()
+      @handlePlaceholder()
+    , 0)
 
   # Event handler
   # (form) reset, blur, focus
   # show/hide the placeholder
   handlePlaceholder: (e)=>
     return unless @$placeholder? # break if no placeholder is given
-    if e.type == 'focus'
+    if e?.type == 'focus'
       # do this only if placeholder is currently in DOM
       unless @placeholderDetached
         @placeholderDetached = true
@@ -225,7 +230,7 @@ class MentionsKinder
         # otherwise rangy failed because focus isn't finished and caret has not been placed yet
         window.setTimeout(=> @$placeholder.detach())
 
-    else if e.type == 'blur' || e.type == 'reset'
+    else
       if @_strip(@serializeEditable()) == ''
         @$editable.empty().append(@$placeholder)
         @placeholderDetached = false
@@ -272,10 +277,7 @@ class MentionsKinder
     @$wrap = $('<div class="mentions-kinder-wrap"></div>')
     @$editable = $('<div class="form-control mentions-kinder" contenteditable="true"></div>')
     @$editable.addClass("mentions-kinder-#{if @multiline then 'multiline' else 'singleline'}")
-    @$input = $("<input type='hidden'/>")
     # set relevant attributes and values
-    @$input.attr('name', @$originalInput.attr('name'))
-    @$input.val(@$originalInput.val())
     @$editable.addClass(@$originalInput.attr("class"))
     if autofocus = @$originalInput.attr('autofocus')
       @$editable.attr('autofocus', autofocus)
@@ -286,8 +288,7 @@ class MentionsKinder
       @$placeholder = $("<span class='placeholder'>#{placeholder}</span>").appendTo(@$editable)
     # hide, show and append all those elements
     @$wrap.insertAfter(@$originalInput)
-    @$originalInput.hide().appendTo(@$wrap)
-    @$input.appendTo(@$wrap)
+    @$originalInput.appendTo(@$wrap).addClass('mentions-kinder-hidden')
     @$editable.appendTo(@$wrap)
     # return
     undefined
@@ -301,13 +302,13 @@ class MentionsKinder
     @$editable.bind 'focus blur', @handlePlaceholder
     @$editable.on 'click', '.delete-mention', @handleDelete
     # input events
-    @$originalInput.bind 'change', @deserializeFromInput
+    @$originalInput.on 'change', (e)=>
+      @deserializeFromInput() unless e.mentionsKinder
     # form related events
     if form = @$originalInput.get(0).form
       @$form = $(form)
       @submitOnEnter = true if !@multiline
       @$form.on('reset', @handleReset)
-      @$form.on('reset', @handlePlaceholder)
 
   # if we remove items from nodeList it is updated live, that results in missed nodes
   # therefore we save the node references in an array and iterate over that
