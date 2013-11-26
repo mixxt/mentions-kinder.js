@@ -15,9 +15,11 @@ body {
     width: 300px;
 }
 
-textarea.debug-area {
+.debug-area {
     float: right;
     width: 300px;
+}
+textarea.debug-area {
     min-height: 74px;
 }
 
