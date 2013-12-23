@@ -105,7 +105,6 @@ class @MentionsKinder
     range.insertNode(tempMention)
     range.selectNodeContents(tempMention)
     selection.setSingleRange(range)
-    selection.collapseToEnd()
 
     @_current.autocompleter = new @_current.triggerOptions.autocompleter(mentionsKind: @)
     @_current.autocompleter.done(@handleAutocompleteDone)
