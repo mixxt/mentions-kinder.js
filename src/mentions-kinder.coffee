@@ -230,7 +230,7 @@ class @MentionsKinder
   # (form) reset, blur, focus
   # show/hide the placeholder
   handlePlaceholder: (e)=>
-    return unless @$placeholder? # break if no placeholder is given
+    return unless @$placeholder? # break if no placeholder is setup
     if e?.type == 'focus'
       # do this only if placeholder is currently in DOM
       unless @placeholderDetached
@@ -294,7 +294,8 @@ class @MentionsKinder
     @deserializeFromInput() unless @$originalInput.val() == ''
     # initialize Placeholder
     if placeholder = @$originalInput.attr('placeholder')
-      @$placeholder = $("<span class='placeholder'>#{placeholder}</span>").appendTo(@$editable)
+      @$placeholder = $("<span class='placeholder'>#{placeholder}</span>")
+      @handlePlaceholder()
     # hide, show and append all those elements
     @$wrap.insertAfter(@$originalInput)
     @$originalInput.appendTo(@$wrap).addClass('mentions-kinder-hidden')
