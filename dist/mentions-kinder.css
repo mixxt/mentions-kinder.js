@@ -1,0 +1,60 @@
+.mention {
+  font-size: 90%;
+  font-weight: normal;
+  padding: .125em .35em;
+  background-color: #3c510c;
+}
+
+.mention .delete-mention {
+  font-family: monospace;
+  color: #A1A1A1;
+  margin-left: 5px;
+  cursor: pointer;
+}
+
+.icon-remove:before {
+  content: 'x';
+  display: inline-block;
+  speak: none;
+}
+
+.temp-mention {
+  background-color: #000080;
+}
+
+.mentions-kinder-multiline {
+  height: auto;
+  word-wrap: break-word;
+}
+
+.mentions-kinder-multiline p {
+  margin: 0;
+}
+
+.mentions-kinder-wrap .placeholder {
+  color: #A39999;
+}
+
+.mentions-kinder-singleline {
+  white-space: nowrap;
+  overflow: hidden;
+}
+
+.mentions-kinder-singleline * {
+  display: inline;
+  white-space: nowrap;
+}
+
+.mentions-kinder-hidden, .mentions-kinder-hidden:focus {
+    clip: rect(0 0 0 0) !important;
+    width: 1px !important;
+    height: 1px !important;
+    border: 0 !important;
+    margin: 0 !important;
+    padding: 0 !important;
+    overflow: hidden !important;
+    position: absolute !important;
+    outline: 0 !important;
+    left: 0px !important;
+    top: 0px !important;
+}
