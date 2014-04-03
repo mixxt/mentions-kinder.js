@@ -1,4 +1,4 @@
-/*! mentions-kinder - v0.1.0-beta8 - 2014-04-03
+/*! mentions-kinder - v0.2.0-beta1 - 2014-04-03
 * https://mixxt.github.io/mentions-kinder.js
 * Copyright (c) 2014 mixxt GmbH; Licensed MIT */
 (function($){

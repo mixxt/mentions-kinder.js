@@ -1,0 +1,26 @@
+{
+  "name": "mentions-kinder.js",
+  "version": "0.2-beta1",
+  "homepage": "https://github.com/mixxt/mentions-kinder.js",
+  "authors": [
+    "Christoph Geschwind <christoph.geschwind@mixxt.de>",
+    "Axel Wahlen <axel.wahlen@mixxt.de>"
+  ],
+  "description": "mentions-kinder is a simple and powerful input ui component that introduces all kinds of tokens/mentions in regular text inputs. Like user mentions you know from Facebook or Google+.",
+  "main": "dist/mentions-kinder.rangy.min.js",
+  "moduleType": [
+    "globals"
+  ],
+  "keywords": [
+    "mentions",
+    "autocomplete"
+  ],
+  "license": "MIT",
+  "ignore": [
+    "**/.*",
+    "node_modules",
+    "bower_components",
+    "test",
+    "tests"
+  ]
+}
