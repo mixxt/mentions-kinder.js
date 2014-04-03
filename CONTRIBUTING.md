@@ -29,3 +29,72 @@ Assuming that you don't see any red, you're ready to go. Just be sure to run `gr
 1. Open `test/*.html` unit test file(s) in actual browser to ensure tests pass everywhere.
 1. Update the documentation to reflect any changes.
 1. Push to your fork and submit a pull request.
+
+## Developing
+1.  Install node.js
+2.  Install node.js Packages
+
+    ```bash
+    npm install
+    ```
+3.  Use grunt to run specs and compile CoffeeScript on the fly
+
+    ```bash
+    grunt server
+    ```
+4. If you develop a feature? Use a feature branch!
+
+    ```bash
+    git checkout -b feature-name_of_my_feature
+    ```
+
+## Create distribution
+1.  Bump version in **package.json** and **mentions-kinder.jquery.json**
+2.  Add and commit version bump
+
+    ```bash
+    git add .
+    git commit -m "Bump version to x.x.x"
+    ```
+3.  Create distribution branch (__dist-x.x.x__)
+
+    ```bash
+    git checkout -b dist-x.x.x
+    ```
+4.  Create distribution / Compile and minify the CoffeeScript to JavaScript
+
+    ```bash
+    grunt dist
+    ```
+5.  Add and commit created JavaScript files
+
+    ```bash
+    git add .
+    git commit -m "x.x.x"
+    ```
+6. Create annotated tag for this version
+
+    ```bash
+    git tag -a -m x.x.x x.x.x
+    ```
+7.  Push the distribution branch and the tag
+
+    ```bash
+    git push -u origin dist-x.x.x
+    git push --tags
+    ```
+8.  Add and commit the updated version in the documentation directory
+
+    ```bash
+    cd doc/
+    git add .
+    git commit -m "Use version x.x.x"
+    git push
+    ```
+9.  Switch back to the develop branch and push the changes
+
+    ```bash
+    cd ..
+    git checkout develop
+    git push
+    ```
