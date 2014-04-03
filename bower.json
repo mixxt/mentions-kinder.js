@@ -1,0 +1,26 @@
+{
+  "name": "mentions-kinder.js",
+  "version": "0.3.0",
+  "homepage": "https://github.com/mixxt/mentions-kinder.js",
+  "authors": [
+    "Christoph Geschwind <christoph@mixxt.net>",
+    "Axel Wahlen <axel@mixxt.net>"
+  ],
+  "description": "simple and customizable inline mentions/token-plugin for jQuery",
+  "main": "dist/mentions-kinder.rangy.js",
+  "moduleType": [
+    "globals"
+  ],
+  "keywords": [
+    "mentions",
+    "autocomplete"
+  ],
+  "license": "MIT",
+  "ignore": [
+    "**/.*",
+    "node_modules",
+    "bower_components",
+    "test",
+    "tests"
+  ]
+}
