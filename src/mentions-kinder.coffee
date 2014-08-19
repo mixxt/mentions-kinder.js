@@ -279,7 +279,7 @@ class @MentionsKinder
 
   # Converts the given input/textarea to an editable that hopefully looks the same
   # called from constructor
-  # assigns @$wrap, @$editable and @$input
+  # assigns @$wrap and @$editable
   # requires @$originalInput
   _setupElements: ->
     # create wrap, editable and hidden input
