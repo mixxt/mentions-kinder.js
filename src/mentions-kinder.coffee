@@ -341,7 +341,7 @@ class @MentionsKinder
     # dont clean text nodes or mention nodes
     if node.nodeType == 3
       # do nothing
-    else if node.nodeName == 'BR'
+    else if node.nodeName.toUpperCase() == 'BR'
       $(node).replaceWith(' ') unless @multiline # clean breaks in single line inputs
     else if $(node).attr('serialized-mention')
       $(node).attr('contenteditable', false) # ensure contenteditable is set after paste
