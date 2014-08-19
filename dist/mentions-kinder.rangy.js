@@ -1,4 +1,4 @@
-/*! mentions-kinder - v0.3.0 - 2014-04-03
+/*! mentions-kinder - v0.3.0 - 2014-08-19
 * https://mixxt.github.io/mentions-kinder.js
 * Copyright (c) 2014 mixxt GmbH; Licensed MIT */
 (function($){
@@ -339,7 +339,7 @@
       var _ref;
       if (node.nodeType === 3) {
 
-      } else if (node.nodeName === 'BR') {
+      } else if (node.nodeName.toUpperCase() === 'BR') {
         if (!this.multiline) {
           $(node).replaceWith(' ');
         }
@@ -348,7 +348,9 @@
       } else {
         if (((_ref = node.childNodes) != null ? _ref.length : void 0) > 0) {
           this._cleanChildNodes(node);
-          $(node).replaceWith(node.childNodes);
+          if (node.childNodes[node.childNodes.length - 1].nodeName.toUpperCase() === 'BR') {
+            $(node.childNodes.item(node.childNodes.length - 1)).remove();
+          }
         } else {
           $(node).remove();
         }
