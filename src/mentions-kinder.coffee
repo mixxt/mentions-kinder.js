@@ -349,7 +349,6 @@ class @MentionsKinder
       # clean all children and replace node with them
       if node.childNodes?.length > 0
         @_cleanChildNodes(node)
-        $(node).replaceWith(node.childNodes)
       # remove node
       else
         $(node).remove()
