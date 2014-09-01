@@ -5,15 +5,15 @@ module.exports = function(grunt) {
     // Project configuration.
     grunt.initConfig({
         // Metadata.
-        pkg: grunt.file.readJSON('mentions-kinder.jquery.json'),
+        pkg: grunt.file.readJSON('bower.json'),
         banner: '/*! <%= pkg.title || pkg.name %> - v<%= pkg.version %> - ' +
             '<%= grunt.template.today("yyyy-mm-dd") %>\n' +
             '<%= pkg.homepage ? "* " + pkg.homepage + "\\n" : "" %>' +
-            '* Copyright (c) <%= grunt.template.today("yyyy") %> <%= pkg.author.company %>;' +
-            ' Licensed <%= _.pluck(pkg.licenses, "type").join(", ") %> */\n',
+            '* Copyright (c) <%= grunt.template.today("yyyy") %> <%= pkg.company %>;' +
+            ' Licensed <%= pkg.license %> */\n',
         // Task configuration.
         clean: {
-            files: ['dist', 'tmp', 'test/*.js']
+            files: ['dist', 'tmp', 'test/*test.js']
         },
         coffee: {
             dev:{
@@ -45,7 +45,7 @@ module.exports = function(grunt) {
                     'tmp/src/autocompleter/select2-autocompleter.js',
                     'tmp/src/jquery-plugin.js'
                 ],
-                dest: 'tmp/<%= pkg.name %>.js',
+                dest: 'tmp/mentions-kinder.js',
                 nonull: true
             },
             dist: {
@@ -57,7 +57,7 @@ module.exports = function(grunt) {
                     'tmp/src/autocompleter/select2-autocompleter.js',
                     'tmp/src/jquery-plugin.js'
                 ],
-                dest: 'dist/<%= pkg.name %>.js',
+                dest: 'dist/mentions-kinder.js',
                 nonull: true
             },
             dist_rangy: {
@@ -67,11 +67,11 @@ module.exports = function(grunt) {
                     'src/extend-patch.js',
 //                    'tmp/src/autocompleter/dummy-autocompleter.js',
                     'tmp/src/autocompleter/select2-autocompleter.js',
-                    'libs/rangy-1.2.3/uncompressed/rangy-core.js',
+                    'bower_components/rangy/rangy-core.js',
                     'tmp/src/jquery-plugin.js',
                     'tmp/src/init-rangy.js'
                 ],
-                dest: 'dist/<%= pkg.name %>.rangy.js',
+                dest: 'dist/mentions-kinder.rangy.js',
                 nonull: true
             }
         },
@@ -81,11 +81,11 @@ module.exports = function(grunt) {
             },
             dist: {
                 src: '<%= concat.dist.dest %>',
-                dest: 'dist/<%= pkg.name %>.min.js'
+                dest: 'dist/mentions-kinder.min.js'
             },
             dist_rangy: {
                 src: '<%= concat.dist_rangy.dest %>',
-                dest: 'dist/<%= pkg.name %>.rangy.min.js'
+                dest: 'dist/mentions-kinder.rangy.min.js'
             }
         },
         qunit: {
