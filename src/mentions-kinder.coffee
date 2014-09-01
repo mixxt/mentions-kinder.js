@@ -349,8 +349,6 @@ class @MentionsKinder
       # clean all children and replace node with them
       if node.childNodes?.length > 0
         @_cleanChildNodes(node)
-        if node.childNodes[node.childNodes.length - 1].nodeName.toUpperCase() == 'BR'
-          $(node.childNodes.item(node.childNodes.length - 1)).remove()
       # remove node
       else
         $(node).remove()
