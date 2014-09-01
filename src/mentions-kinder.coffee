@@ -75,7 +75,7 @@ class @MentionsKinder
 
   # serialize the editable element
   serializeEditable: ->
-    @_serializeNode(@$editable[0]).join('')
+    @_trim(@_serializeNode(@$editable[0]).join(''))
 
   # Deserialize the original input into the editable
   deserializeFromInput: =>
@@ -239,7 +239,7 @@ class @MentionsKinder
         window.setTimeout(=> @$placeholder.detach())
 
     else
-      if @_strip(@serializeEditable()) == ''
+      if @serializeEditable() == ''
         @$editable.empty().append(@$placeholder)
         @placeholderDetached = false
 
@@ -484,6 +484,6 @@ class @MentionsKinder
       range = rangy.getSelection().getRangeAt(0)
       range?.compareNode(@_current.$tempMention.get(0)) == range.NODE_BEFORE_AND_AFTER
 
-  # Helper method to strip whitespaces from start/end of text
-  _strip: (text)->
-    text.replace(/^\s*(.*?)\s*$/gm, '$1')
+  # Helper method to trim whitespaces from start/end of text
+  _trim: (text)->
+    $.trim(text)
