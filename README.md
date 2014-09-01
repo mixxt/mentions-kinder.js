@@ -1,4 +1,4 @@
-mentions-kinder.js [![Build Status](https://travis-ci.org/mixxt/mentions-kinder.js.png?branch=master)](https://travis-ci.org/mixxt/mentions-kinder.js)
+mentions-kinder.js [![Build Status](http://img.shields.io/travis/mixxt/mentions-kinder.js.svg)](https://travis-ci.org/mixxt/mentions-kinder.js)
 =================
 mentions-kinder is a simple and powerful input ui component that introduces all kinds of tokens/mentions in regular text inputs. Like user mentions you know from Facebook or Google+.
 It tries to be as configurable and customizable as possible while providing a basic setup you can use right away.
