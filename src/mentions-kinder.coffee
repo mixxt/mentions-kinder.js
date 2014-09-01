@@ -13,6 +13,7 @@
 ###
 class @MentionsKinder
   KEY = { RETURN: 13, ESC: 27 }
+  TEXT_NODE = 3
   # default options, exposed under $.mentionsKinder.defaultOptions
   defaultOptions:
     trigger:
@@ -379,7 +380,7 @@ class @MentionsKinder
   # recurses into child nodes
   _cleanNode: (node)->
     # dont clean text nodes or mention nodes
-    if node.nodeType == 3
+    if node.nodeType == TEXT_NODE
       # do nothing
     else if node.nodeName.toUpperCase() == 'BR'
       $(node).replaceWith(' ') unless @multiline # clean breaks in single line inputs
@@ -401,7 +402,7 @@ class @MentionsKinder
     textNodes = []
     for node in parentNode.childNodes
       # is text node, append text
-      if node.nodeType == 3 # nodeType 3 is a text node
+      if node.nodeType == TEXT_NODE
         textNodes.push node.data
         # is br node, append newline
       else if node.nodeName.toUpperCase() == 'BR'
