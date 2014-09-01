@@ -156,3 +156,9 @@ do ($ = jQuery) ->
       MentionsKinder::serializeNode(document.getElementById('serialize-me-6')),
       "Hello\nWorld"
     )
+
+  test 'it converts non-breaking space to regular space', ->
+    equal(
+      MentionsKinder::serializeNode(document.getElementById('serialize-me-7')),
+      "Hello Banana"
+    )

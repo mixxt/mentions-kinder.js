@@ -399,7 +399,7 @@ class @MentionsKinder
 
   # Helper Method to serialize a node, support for different node types
   serializeNode: (node)->
-    @_trim(@_tokenizeNode(node).join(''))
+    @_trim(@_tokenizeNode(node).join('')).replace(/\u00A0/g, ' ')
 
   _tokenizeNode: (parentNode)->
     textNodes = []
