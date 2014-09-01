@@ -1,17 +1,19 @@
-/*! mentions-kinder - v0.3.0 - 2014-08-19
-* https://mixxt.github.io/mentions-kinder.js
+/*! mentions-kinder.js - v0.3.2 - 2014-09-01
+* https://github.com/mixxt/mentions-kinder.js
 * Copyright (c) 2014 mixxt GmbH; Licensed MIT */
 (function($){
 (function() {
   var __bind = function(fn, me){ return function(){ return fn.apply(me, arguments); }; };
 
   this.MentionsKinder = (function() {
-    var KEY, cloneReferences;
+    var KEY, TEXT_NODE, cloneReferences;
 
     KEY = {
       RETURN: 13,
       ESC: 27
     };
+
+    TEXT_NODE = 3;
 
     MentionsKinder.prototype.defaultOptions = {
       trigger: {
@@ -89,7 +91,7 @@
     };
 
     MentionsKinder.prototype.serializeEditable = function() {
-      return this._serializeNode(this.$editable[0]).join('');
+      return this.serializeNode(this.$editable[0]);
     };
 
     MentionsKinder.prototype.deserializeFromInput = function() {
@@ -105,18 +107,14 @@
     };
 
     MentionsKinder.prototype.startAutocomplete = function(triggerChar) {
-      var range, selection, tempMention;
+      var tempMention;
       this._current = {
         trigger: triggerChar,
         triggerOptions: this.trigger[triggerChar],
         $tempMention: $("<span class='mention temp-mention label'>" + triggerChar + "</span>")
       };
       tempMention = this._current.$tempMention.get(0);
-      selection = rangy.getSelection();
-      range = selection.getRangeAt(0);
-      range.insertNode(tempMention);
-      range.selectNodeContents(tempMention);
-      selection.setSingleRange(range);
+      this._insertNode(tempMention);
       this._current.autocompleter = new this._current.triggerOptions.autocompleter({
         mentionsKind: this
       });
@@ -206,8 +204,14 @@
       return this.populateInput();
     };
 
-    MentionsKinder.prototype.handlePaste = function() {
-      return setTimeout(this.cleanEditable, 0);
+    MentionsKinder.prototype.handlePaste = function(e) {
+      var content;
+      if ((content = this._getClipboardContent(e))) {
+        e.preventDefault();
+        return this._insertText(content);
+      } else {
+        return setTimeout(this.cleanEditable, 0);
+      }
     };
 
     MentionsKinder.prototype.handleReset = function() {
@@ -232,7 +236,7 @@
           });
         }
       } else {
-        if (this._strip(this.serializeEditable()) === '') {
+        if (this.serializeEditable() === '') {
           this.$editable.empty().append(this.$placeholder);
           return this.placeholderDetached = false;
         }
@@ -315,6 +319,55 @@
       }
     };
 
+    MentionsKinder.prototype._getClipboardContent = function(e) {
+      var _ref, _ref1;
+      if ((_ref = e.originalEvent) != null ? _ref.clipboardData : void 0) {
+        return e.originalEvent.clipboardData.getData('text/plain');
+      } else if ((_ref1 = window.clipboardData) != null ? _ref1.getData : void 0) {
+        return window.clipboardData.getData('Text');
+      }
+    };
+
+    MentionsKinder.prototype._getRange = function(block) {
+      var range, selection;
+      selection = rangy.getSelection();
+      range = selection.getRangeAt(0);
+      selection.setSingleRange(range);
+      return block(range, selection);
+    };
+
+    MentionsKinder.prototype._insertNode = function(node) {
+      return this._getRange(function(range, selection) {
+        range.insertNode(node);
+        range.selectNodeContents(node);
+        return selection.collapseToEnd();
+      });
+    };
+
+    MentionsKinder.prototype._insertText = function(text) {
+      var line, lines, nodes, _i, _len;
+      lines = text.split("\n");
+      nodes = [];
+      for (_i = 0, _len = lines.length; _i < _len; _i++) {
+        line = lines[_i];
+        nodes.push(document.createTextNode(line));
+        nodes.push(document.createElement('BR'));
+      }
+      nodes.pop();
+      this._getRange(function(range, selection) {
+        var node, reverse, _j, _len1;
+        range.deleteContents();
+        reverse = nodes.reverse();
+        for (_j = 0, _len1 = reverse.length; _j < _len1; _j++) {
+          node = reverse[_j];
+          range.insertNode(node);
+        }
+        range.selectNodeContents(reverse[0]);
+        return selection.collapseToEnd();
+      });
+      return void 0;
+    };
+
     cloneReferences = function(nodes) {
       var node, _i, _len, _results;
       _results = [];
@@ -337,7 +390,7 @@
 
     MentionsKinder.prototype._cleanNode = function(node) {
       var _ref;
-      if (node.nodeType === 3) {
+      if (node.nodeType === TEXT_NODE) {
 
       } else if (node.nodeName.toUpperCase() === 'BR') {
         if (!this.multiline) {
@@ -348,9 +401,7 @@
       } else {
         if (((_ref = node.childNodes) != null ? _ref.length : void 0) > 0) {
           this._cleanChildNodes(node);
-          if (node.childNodes[node.childNodes.length - 1].nodeName.toUpperCase() === 'BR') {
-            $(node.childNodes.item(node.childNodes.length - 1)).remove();
-          }
+          $(node).replaceWith(node.childNodes);
         } else {
           $(node).remove();
         }
@@ -358,28 +409,46 @@
       return true;
     };
 
-    MentionsKinder.prototype._serializeNode = function(parentNode) {
-      var node, serializedMention, textNodes, _i, _len, _ref, _ref1, _ref2;
+    MentionsKinder.prototype.serializeNode = function(node) {
+      return this._trim(this._tokenizeNode(node).join('')).replace(/\u00A0/g, ' ');
+    };
+
+    MentionsKinder.prototype._tokenizeNode = function(parentNode) {
+      var node, serializedMention, textNodes, _i, _len, _ref;
       textNodes = [];
       _ref = parentNode.childNodes;
       for (_i = 0, _len = _ref.length; _i < _len; _i++) {
         node = _ref[_i];
-        if (node.nodeType === 3) {
+        if (node.nodeType === TEXT_NODE) {
           textNodes.push(node.data);
         } else if (node.nodeName.toUpperCase() === 'BR') {
-          textNodes.push("\n");
+          if (!this._isLastChildNode(node)) {
+            textNodes.push("\n");
+          }
         } else if (serializedMention = $(node).attr('serialized-mention')) {
           textNodes.push(serializedMention);
         } else if (node.nodeName.toUpperCase() === 'P' || node.nodeName.toUpperCase() === 'DIV') {
-          if (((_ref1 = node.childNodes[0]) != null ? (_ref2 = _ref1.nodeName) != null ? _ref2.toUpperCase() : void 0 : void 0) !== 'BR') {
+          if (this._previousNodeIsTextNode(node)) {
             textNodes.push("\n");
           }
-          textNodes = textNodes.concat(this._serializeNode(node));
+          textNodes = textNodes.concat(this._tokenizeNode(node));
+          if (!this._isLastChildNode(node)) {
+            textNodes.push("\n");
+          }
         } else {
-          textNodes = textNodes.concat(this._serializeNode(node));
+          textNodes = textNodes.concat(this._tokenizeNode(node));
         }
       }
       return textNodes;
+    };
+
+    MentionsKinder.prototype._isLastChildNode = function(node) {
+      return node.parentNode.lastChild === node;
+    };
+
+    MentionsKinder.prototype._previousNodeIsTextNode = function(node) {
+      var _ref;
+      return ((_ref = node.previousSibling) != null ? _ref.nodeType : void 0) === TEXT_NODE;
     };
 
     MentionsKinder.prototype._deserialize = function(text) {
@@ -449,8 +518,8 @@
       }
     };
 
-    MentionsKinder.prototype._strip = function(text) {
-      return text.replace(/^\s*(.*?)\s*$/gm, '$1');
+    MentionsKinder.prototype._trim = function(text) {
+      return $.trim(text);
     };
 
     return MentionsKinder;
