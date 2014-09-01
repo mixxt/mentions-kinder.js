@@ -100,11 +100,7 @@ class @MentionsKinder
     }
 
     tempMention = @_current.$tempMention.get(0)
-    selection = rangy.getSelection()
-    range = selection.getRangeAt(0)
-    range.insertNode(tempMention)
-    range.selectNodeContents(tempMention)
-    selection.setSingleRange(range)
+    @_insertNode(tempMention)
 
     @_current.autocompleter = new @_current.triggerOptions.autocompleter(mentionsKind: @)
     @_current.autocompleter.done(@handleAutocompleteDone)
@@ -211,10 +207,12 @@ class @MentionsKinder
 
   # Event handler
   # paste
-  # Cleanup editable
-  handlePaste: =>
-    # defer, content is not in yet
-    setTimeout(@cleanEditable, 0)
+  handlePaste: (e)=>
+    if (content = @_getClipboardContent(e))
+      e.preventDefault()
+      @_insertText(content)
+    else
+      setTimeout(@cleanEditable, 0)
 
   # Event handler
   # (form) reset
@@ -320,6 +318,48 @@ class @MentionsKinder
       @$form = $(form)
       @submitOnEnter = true if !@multiline
       @$form.on('reset', @handleReset)
+
+  # get clipboard content from given event or windows clipboardData
+  _getClipboardContent: (e)->
+    if e.originalEvent?.clipboardData
+      e.originalEvent.clipboardData.getData('text/plain')
+    else if window.clipboardData?.getData
+      window.clipboardData.getData('Text')
+
+  _getRange: (block)->
+    selection = rangy.getSelection()
+    range = selection.getRangeAt(0)
+    selection.setSingleRange(range)
+    block(range, selection)
+
+  # insert a node at current cursor position
+  # sets cursor after node
+  _insertNode: (node)->
+    @_getRange (range, selection)->
+      range.insertNode(node)
+      range.selectNodeContents(node)
+      selection.collapseToEnd()
+
+  # insert a plain text at current cursor position
+  # substitutes line breaks with <br>
+  # sets cursor to end of inserted text
+  _insertText: (text)->
+    lines = text.split("\n")
+    nodes = []
+    for line in lines
+      nodes.push document.createTextNode(line)
+      nodes.push document.createElement('BR')
+    nodes.pop() # remove last br
+
+    @_getRange (range, selection)->
+      range.deleteContents()
+      reverse = nodes.reverse()
+      for node in reverse
+        range.insertNode(node)
+      range.selectNodeContents(reverse[0])
+      selection.collapseToEnd()
+
+    undefined
 
   # if we remove items from nodeList it is updated live, that results in missed nodes
   # therefore we save the node references in an array and iterate over that
