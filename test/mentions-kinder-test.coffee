@@ -43,7 +43,7 @@ do ($ = jQuery) ->
 
   module 'Input modification',
     setup: ->
-      @inputs = $('#qunit-fixture').children()
+      @inputs = $('#inputs').children()
 
   test 'it wraps the input', ->
     expect 4
@@ -118,3 +118,41 @@ do ($ = jQuery) ->
     textNodeEqual result[0], 'foo'
     ok result[1].tagName.toLowerCase() == 'br'
     textNodeEqual result[2], 'bar'
+
+  module 'serialization'
+
+  test 'it serializes simple element', ->
+    equal(
+      MentionsKinder::serializeNode(document.getElementById('serialize-me-1')),
+      "Hello"
+    )
+
+  test 'it serializes divs', ->
+    equal(
+      MentionsKinder::serializeNode(document.getElementById('serialize-me-2')),
+      "Hello\nWorld"
+    )
+
+  test 'it serializes divs with brs', ->
+    equal(
+      MentionsKinder::serializeNode(document.getElementById('serialize-me-3')),
+      "Hello\nWorld"
+    )
+
+  test 'it serializes empty divs with brs inbetween', ->
+    equal(
+      MentionsKinder::serializeNode(document.getElementById('serialize-me-4')),
+      "Hello"
+    )
+
+  test 'it serializes empty divs and brs', ->
+    equal(
+      MentionsKinder::serializeNode(document.getElementById('serialize-me-5')),
+      "Hello\n\n\n\n\nWorld"
+    )
+
+  test 'it serializes divs in divs', ->
+    equal(
+      MentionsKinder::serializeNode(document.getElementById('serialize-me-6')),
+      "Hello\nWorld"
+    )

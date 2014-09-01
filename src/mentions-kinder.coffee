@@ -75,7 +75,7 @@ class @MentionsKinder
 
   # serialize the editable element
   serializeEditable: ->
-    @_trim(@_serializeNode(@$editable[0]).join(''))
+    @serializeNode @$editable[0]
 
   # Deserialize the original input into the editable
   deserializeFromInput: =>
@@ -397,8 +397,11 @@ class @MentionsKinder
 
     true
 
-  # Helper Method toserialize a node, support for different node types
-  _serializeNode: (parentNode)->
+  # Helper Method to serialize a node, support for different node types
+  serializeNode: (node)->
+    @_trim(@_tokenizeNode(node).join(''))
+
+  _tokenizeNode: (parentNode)->
     textNodes = []
     for node in parentNode.childNodes
       # is text node, append text
@@ -406,20 +409,26 @@ class @MentionsKinder
         textNodes.push node.data
         # is br node, append newline
       else if node.nodeName.toUpperCase() == 'BR'
-        textNodes.push "\n"
+        textNodes.push "\n" unless @_isLastChildNode(node)
         # is mention, append serializedMention
       else if serializedMention = $(node).attr('serialized-mention')
         textNodes.push serializedMention
         # is p or div, append newline and serialize children
       else if node.nodeName.toUpperCase() == 'P' || node.nodeName.toUpperCase() == 'DIV'
-        # add newline only if first child is not a br-node, prevent endless new line duplicating
-        textNodes.push("\n") unless node.childNodes[0]?.nodeName?.toUpperCase() == 'BR'
-        textNodes = textNodes.concat @_serializeNode(node)
+        textNodes.push("\n") if @_previousNodeIsTextNode(node)
+        textNodes = textNodes.concat @_tokenizeNode(node)
+        textNodes.push("\n") unless @_isLastChildNode(node)
         # is any other tag, serialize children
       else
-        textNodes = textNodes.concat @_serializeNode(node)
+        textNodes = textNodes.concat @_tokenizeNode(node)
 
     textNodes
+
+  _isLastChildNode: (node)->
+    node.parentNode.lastChild == node
+
+  _previousNodeIsTextNode: (node)->
+    node.previousSibling?.nodeType == TEXT_NODE
 
   # Helper Method to deserialize given text into nodes
   _deserialize: (text)->

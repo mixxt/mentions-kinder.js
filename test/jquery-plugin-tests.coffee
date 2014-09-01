@@ -22,7 +22,7 @@
 do ($ = jQuery) ->
   module 'jQuery#mentionsKinder',
     setup: ->
-      @elems = $('#qunit-fixture').children()
+      @elems = $('#inputs').children()
 
   test 'is chainable', ->
     equal @elems.mentionsKinder(), @elems, 'should be chainable'

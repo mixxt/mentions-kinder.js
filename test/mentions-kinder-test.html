@@ -1,27 +1,36 @@
 <!DOCTYPE html>
 <html>
 <head>
-  <meta charset="utf-8">
-  <title>mentions-kinder Test Suite</title>
-  <!-- Load local jQuery. This can be overridden with a ?jquery=___ param. -->
-  <script src="../libs/jquery-loader.js"></script>
-  <!-- Load local QUnit. -->
-  <link rel="stylesheet" href="../libs/qunit/qunit.css" media="screen">
-  <script src="../libs/qunit/qunit.js"></script>
-  <!-- Load local lib and tests. -->
-  <script src="../libs/rangy-1.2.3/uncompressed/rangy-core.js"></script>
-  <script src="../tmp/mentions-kinder.js"></script>
-  <script src="../tmp/tests.js"></script>
-  <!-- Removing access to jQuery and $. But it'll still be available as _$, if
-       you REALLY want to mess around with jQuery in the console. REMEMBER WE
-       ARE TESTING A PLUGIN HERE, THIS HELPS ENSURE BEST PRACTICES. REALLY. -->
-  <script>window._$ = jQuery.noConflict(true);</script>
+    <meta charset="utf-8">
+    <title>mentions-kinder Test Suite</title>
+    <!-- Load local jQuery. This can be overridden with a ?jquery=___ param. -->
+    <script src="../libs/jquery-loader.js"></script>
+    <!-- Load local QUnit. -->
+    <link rel="stylesheet" href="../libs/qunit/qunit.css" media="screen">
+    <script src="../libs/qunit/qunit.js"></script>
+    <!-- Load local lib and tests. -->
+    <script src="../libs/rangy-1.2.3/uncompressed/rangy-core.js"></script>
+    <script src="../tmp/mentions-kinder.js"></script>
+    <script src="../tmp/tests.js"></script>
+    <!-- Removing access to jQuery and $. But it'll still be available as _$, if
+         you REALLY want to mess around with jQuery in the console. REMEMBER WE
+         ARE TESTING A PLUGIN HERE, THIS HELPS ENSURE BEST PRACTICES. REALLY. -->
+    <script>window._$ = jQuery.noConflict(true);</script>
 </head>
 <body>
-  <div id="qunit"></div>
-  <div id="qunit-fixture">
-    <textarea name="text1"></textarea>
-    <input type="text" name="text2" />
-  </div>
+<div id="qunit"></div>
+<div id="qunit-fixture">
+    <div id="inputs">
+        <textarea name="text1"></textarea>
+        <input type="text" name="text2" />
+    </div>
+
+    <div id="serialize-me-1" contenteditable>Hello</div>
+    <div id="serialize-me-2" contenteditable><div>Hello</div><div>World</div></div>
+    <div id="serialize-me-3" contenteditable><div>Hello<br></div><div>World<br></div></div>
+    <div id="serialize-me-4" contenteditable><div></div>Hello<div><br /></div></div>
+    <div id="serialize-me-5" contenteditable><div></div>Hello<div><br /></div><div><br /></div><div><br /></div><div><br /></div><div>World</div></div>
+    <div id="serialize-me-6" contenteditable><div><div>Hello<br></div><div>World</div><div></div></div></div>
+</div>
 </body>
 </html>
