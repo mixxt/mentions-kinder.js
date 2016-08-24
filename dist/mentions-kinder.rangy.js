@@ -1,6 +1,6 @@
-/*! mentions-kinder.js - v0.3.2 - 2014-09-01
+/*! mentions-kinder.js - v0.3.3 - 2016-08-24
 * https://github.com/mixxt/mentions-kinder.js
-* Copyright (c) 2014 mixxt GmbH; Licensed MIT */
+* Copyright (c) 2016 mixxt GmbH; Licensed MIT */
 (function($){
 (function() {
   var __bind = function(fn, me){ return function(){ return fn.apply(me, arguments); }; };
@@ -208,10 +208,11 @@
       var content;
       if ((content = this._getClipboardContent(e))) {
         e.preventDefault();
-        return this._insertText(content);
+        this._insertText(content);
       } else {
-        return setTimeout(this.cleanEditable, 0);
+        setTimeout(this.cleanEditable, 0);
       }
+      return setTimeout(this.populateInput, 0);
     };
 
     MentionsKinder.prototype.handleReset = function() {
