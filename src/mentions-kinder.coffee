@@ -215,6 +215,9 @@ class @MentionsKinder
     else
       setTimeout(@cleanEditable, 0)
 
+    # set plaintext to our hidden field
+    setTimeout(@populateInput, 0)
+
   # Event handler
   # (form) reset
   # reset editable
